@@ -508,6 +508,22 @@
       font-size: 20px;
     }
 
+    .exit-lobby-btn {
+      width: 100%;
+      padding: 13px;
+      margin-bottom: 18px;
+      border: 1px solid rgba(255, 80, 80, 0.18);
+      border-radius: 13px;
+      background: rgba(180, 40, 40, 0.08);
+      color: #e8a0a0;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .exit-lobby-btn:active {
+      transform: scale(0.98);
+    }
+
     .chat-box {
       border-radius: 18px;
       background: rgba(255,255,255,0.025);
@@ -1025,6 +1041,13 @@
   <div class="player-slots" id="playerSlots"></div>
 
 
+  <!-- خروج از لابی -->
+
+  <button class="exit-lobby-btn" onclick="exitLobby()">
+    🚪 خروج از لابی
+  </button>
+
+
   <div class="chat-box">
 
     <div class="chat-title">
@@ -1228,16 +1251,12 @@
   let myCoins = 5;
 
   /*
-    نقش‌هایی که در همین لابی گرفته شده‌اند.
-    بعداً این قسمت به سرور واقعی وصل می‌شود.
+    فعلاً برای تست فرانت‌اند.
+    بعداً به سرور واقعی وصل می‌شود.
   */
   let takenRoles = [];
 
 
-  /*
-    فقط نقش‌هایی که می‌توانند به صورت تصادفی
-    انتخاب شوند.
-  */
   const randomRoles = [
     "دکتر",
     "بازپرس",
@@ -1337,6 +1356,7 @@
       myCoins;
 
     selectedRole = null;
+
     isRandomRole = false;
 
     document.getElementById('confirmBox')
@@ -1387,16 +1407,24 @@
 
   /*
     نقش تصادفی
-    کاملاً رایگان
+    رایگان و ورود مستقیم به لابی
   */
 
   function chooseRandomRole() {
 
-    const availableRoles =
-      randomRoles.filter(function(role) {
-        return !takenRoles.includes(role);
-      });
+    /*
+      فقط نقش‌هایی که هنوز گرفته نشده‌اند
+      می‌توانند انتخاب شوند.
+    */
 
+    const availableRoles = randomRoles.filter(function(role) {
+      return !takenRoles.includes(role);
+    });
+
+
+    /*
+      اگر هیچ نقشی باقی نمانده باشد.
+    */
 
     if (availableRoles.length === 0) {
 
@@ -1409,6 +1437,10 @@
     }
 
 
+    /*
+      انتخاب تصادفی یک نقش آزاد.
+    */
+
     const randomIndex =
       Math.floor(Math.random() * availableRoles.length);
 
@@ -1417,36 +1449,32 @@
       availableRoles[randomIndex];
 
 
+    /*
+      مشخص می‌کنیم که نقش تصادفی بوده.
+    */
+
     isRandomRole = true;
 
 
-    document.querySelectorAll('.role-card').forEach(function(card) {
+    /*
+      نقش همان لحظه رزرو می‌شود.
+    */
 
-      card.classList.remove('selected');
-
-      if (card.dataset.role === selectedRole) {
-        card.classList.add('selected');
-      }
-
-    });
+    takenRoles.push(selectedRole);
 
 
-    document.getElementById('selectedRoleName').textContent =
-      '🎲 ' + selectedRole;
+    /*
+      هیچ تأییدی نمایش داده نمی‌شود.
+      بازیکن مستقیم وارد لابی می‌شود.
+    */
 
-
-    document.getElementById('selectedRoleText').textContent =
-      'این نقش به صورت تصادفی و رایگان برایت انتخاب شده است.';
-
-
-    document.getElementById('confirmBox')
-      .classList.add('show');
+    openPublicLobby();
 
   }
 
 
   /*
-    تأیید نقش
+    تأیید نقش خریداری‌شده
   */
 
   function confirmRole() {
@@ -1461,28 +1489,11 @@
 
 
     /*
-      اگر تصادفی بوده:
-      هیچ سکه‌ای کم نمی‌شود.
+      اگر تصادفی باشد، نباید وارد این قسمت شود.
+      چون نقش تصادفی مستقیماً وارد لابی شده است.
     */
 
     if (isRandomRole) {
-
-      if (takenRoles.includes(selectedRole)) {
-
-        alert(
-          'این نقش در همین لحظه توسط بازیکن دیگری گرفته شده است.'
-        );
-
-        updateRoleCards();
-
-        return;
-
-      }
-
-
-      takenRoles.push(selectedRole);
-
-      openPublicLobby();
 
       return;
 
@@ -1506,8 +1517,7 @@
 
 
     /*
-      دوباره بررسی می‌کنیم که نقش
-      در فاصله انتخاب تا تأیید گرفته نشده باشد.
+      بررسی دوباره نقش.
     */
 
     if (takenRoles.includes(selectedRole)) {
@@ -1522,6 +1532,10 @@
 
     }
 
+
+    /*
+      پرداخت ۵ سکه.
+    */
 
     myCoins -= 5;
 
@@ -1649,7 +1663,78 @@
   }
 
 
+  /*
+    خروج از لابی
+    نقش بازیکن آزاد می‌شود.
+  */
+
+  function exitLobby() {
+
+    if (selectedRole) {
+
+      const roleIndex =
+        takenRoles.indexOf(selectedRole);
+
+      if (roleIndex !== -1) {
+
+        takenRoles.splice(roleIndex, 1);
+
+      }
+
+    }
+
+
+    selectedRole = null;
+
+    isRandomRole = false;
+
+
+    document.getElementById('confirmBox')
+      .classList.remove('show');
+
+
+    hideAllPages();
+
+    document.getElementById('publicRoles')
+      .classList.add('active');
+
+
+    updateRoleCards();
+
+    updateCoins();
+
+  }
+
+
+  /*
+    برگشت از لابی به صفحه نقش‌ها
+  */
+
   function backToRoles() {
+
+    /*
+      اگر بازیکن نقش گرفته باشد،
+      نقش آزاد می‌شود.
+    */
+
+    if (selectedRole) {
+
+      const roleIndex =
+        takenRoles.indexOf(selectedRole);
+
+      if (roleIndex !== -1) {
+
+        takenRoles.splice(roleIndex, 1);
+
+      }
+
+    }
+
+
+    selectedRole = null;
+
+    isRandomRole = false;
+
 
     hideAllPages();
 
