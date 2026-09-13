@@ -3,65 +3,151 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>مافیا</title>
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       min-height: 100vh;
+      background:
+        radial-gradient(circle at top, #25213f 0%, #11111f 45%, #080810 100%);
+      color: white;
+      font-family: Arial, sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
-      background: #111827;
-      color: white;
-      font-family: Arial, sans-serif;
+      padding: 20px;
     }
 
-    .box {
+    .container {
+      width: 100%;
+      max-width: 430px;
       text-align: center;
-      padding: 40px 25px;
+    }
+
+    .logo {
+      font-size: 70px;
+      margin-bottom: 5px;
+      filter: drop-shadow(0 0 15px rgba(255,255,255,0.15));
     }
 
     h1 {
+      margin: 0;
       font-size: 42px;
-      margin-bottom: 15px;
+      letter-spacing: 1px;
     }
 
-    p {
-      font-size: 20px;
-      color: #d1d5db;
-      margin-bottom: 30px;
+    .subtitle {
+      margin: 12px 0 35px;
+      color: #b9b9c8;
+      font-size: 17px;
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
     }
 
     button {
+      width: 100%;
       border: none;
-      padding: 15px 35px;
-      border-radius: 12px;
+      border-radius: 15px;
+      padding: 17px;
       font-size: 18px;
+      font-weight: bold;
       cursor: pointer;
-      background: #ffffff;
-      color: #111827;
+      transition: 0.2s;
     }
 
     button:active {
       transform: scale(0.97);
+    }
+
+    .main-button {
+      background: white;
+      color: #11111f;
+    }
+
+    .secondary-button {
+      background: #242438;
+      color: white;
+      border: 1px solid #3a3a55;
+    }
+
+    .secondary-button:hover {
+      background: #303047;
+    }
+
+    .footer {
+      margin-top: 35px;
+      color: #666679;
+      font-size: 13px;
     }
   </style>
 </head>
 
 <body>
 
-  <div class="box">
-    <h1>🎭 مافیا</h1>
-    <p>به بازی مافیا خوش آمدید</p>
+  <div class="container">
 
-    <button onclick="startGame()">شروع بازی</button>
+    <div class="logo">🎭</div>
+
+    <h1>مافیا</h1>
+
+    <div class="subtitle">
+      بازی گروهی مافیا
+    </div>
+
+    <div class="menu">
+
+      <button class="main-button" onclick="createRoom()">
+        🏠 ساخت اتاق
+      </button>
+
+      <button class="secondary-button" onclick="joinRoom()">
+        🚪 ورود به اتاق
+      </button>
+
+      <button class="secondary-button" onclick="profile()">
+        👤 پروفایل
+      </button>
+
+      <button class="secondary-button" onclick="settings()">
+        ⚙️ تنظیمات
+      </button>
+
+    </div>
+
+    <div class="footer">
+      نسخه اولیه بازی مافیا
+    </div>
+
   </div>
 
   <script>
-    function startGame() {
-      alert("بازی مافیا به‌زودی شروع می‌شود 🎭");
+
+    function createRoom() {
+      alert("بخش ساخت اتاق به‌زودی فعال می‌شود 🎭");
     }
+
+    function joinRoom() {
+      alert("بخش ورود به اتاق به‌زودی فعال می‌شود 🚪");
+    }
+
+    function profile() {
+      alert("پروفایل بازیکن به‌زودی فعال می‌شود 👤");
+    }
+
+    function settings() {
+      alert("تنظیمات به‌زودی فعال می‌شود ⚙️");
+    }
+
   </script>
 
 </body>
