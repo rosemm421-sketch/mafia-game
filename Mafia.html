@@ -3,11 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>مافیا</title>
 
   <style>
-
     * {
       box-sizing: border-box;
       margin: 0;
@@ -17,766 +15,597 @@
 
     body {
       font-family: Tahoma, Arial, sans-serif;
-      background: #07070c;
+      background:
+        radial-gradient(circle at 50% 15%, rgba(110, 40, 180, 0.20), transparent 35%),
+        linear-gradient(180deg, #080711 0%, #0b0914 50%, #05050a 100%);
       color: white;
       min-height: 100vh;
       overflow-x: hidden;
     }
 
-    /* =========================
-       BACKGROUND
-    ========================= */
-
-    .background {
-      position: fixed;
-      inset: 0;
-      overflow: hidden;
-      pointer-events: none;
-      z-index: 0;
-
-      background:
-        radial-gradient(
-          circle at 50% 5%,
-          rgba(115, 55, 180, 0.20),
-          transparent 35%
-        ),
-        radial-gradient(
-          circle at 100% 45%,
-          rgba(70, 35, 120, 0.14),
-          transparent 38%
-        ),
-        radial-gradient(
-          circle at 0% 100%,
-          rgba(45, 25, 85, 0.16),
-          transparent 40%
-        ),
-        linear-gradient(
-          180deg,
-          #09080f 0%,
-          #08080d 45%,
-          #050509 100%
-        );
+    button {
+      font-family: inherit;
     }
 
-    .light-top {
-      position: absolute;
-      width: 420px;
-      height: 420px;
-      top: -280px;
-      left: 50%;
-      transform: translateX(-50%);
-
-      background: rgba(125, 70, 190, 0.20);
-      filter: blur(100px);
-      border-radius: 50%;
-    }
-
-    .light-right {
-      position: absolute;
-      width: 300px;
-      height: 500px;
-      right: -230px;
-      top: 25%;
-
-      background: rgba(100, 50, 160, 0.13);
-      filter: blur(100px);
-      border-radius: 50%;
-    }
-
-    .light-bottom {
-      position: absolute;
-      width: 450px;
-      height: 250px;
-      bottom: -180px;
-      left: 50%;
-      transform: translateX(-50%);
-
-      background: rgba(90, 45, 150, 0.14);
-      filter: blur(90px);
-      border-radius: 50%;
-    }
-
-    .fog {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(70px);
-      opacity: 0.15;
-      animation: fogMove 12s ease-in-out infinite alternate;
-    }
-
-    .fog.one {
-      width: 180px;
-      height: 180px;
-      left: -80px;
-      top: 25%;
-      background: #4e277c;
-    }
-
-    .fog.two {
-      width: 220px;
-      height: 220px;
-      right: -120px;
-      bottom: 20%;
-      background: #35205d;
-      animation-delay: -5s;
-    }
-
-    @keyframes fogMove {
-      from {
-        transform: translate(0, 0);
-      }
-
-      to {
-        transform: translate(30px, -25px);
-      }
-    }
-
-    /* =========================
-       APP
-    ========================= */
-
-    .app {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      max-width: 520px;
-      min-height: 100vh;
-      margin: auto;
-
-      padding-bottom: 90px;
-    }
-
-    /* =========================
-       TOP BAR
-    ========================= */
-
-    .top-bar {
+    .header {
       height: 75px;
+      padding: 10px 14px;
       display: flex;
       align-items: center;
-
-      padding: 12px 15px;
-
+      justify-content: space-between;
       border-bottom: 1px solid rgba(255,255,255,0.06);
-
-      background:
-        linear-gradient(
-          180deg,
-          rgba(15,14,23,0.95),
-          rgba(10,9,15,0.78)
-        );
-
-      backdrop-filter: blur(15px);
+      background: rgba(5,5,10,0.75);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
     }
 
-    .player-info {
+    .profile-mini {
       display: flex;
       align-items: center;
-      gap: 10px;
-
-      flex: 1;
-      min-width: 0;
+      gap: 9px;
     }
 
     .avatar {
-      width: 45px;
-      height: 45px;
-
+      width: 43px;
+      height: 43px;
       border-radius: 50%;
-
+      background: linear-gradient(135deg, #8b35d9, #30105b);
+      border: 2px solid rgba(180,100,255,0.45);
       display: flex;
       align-items: center;
       justify-content: center;
-
-      font-size: 22px;
-
-      background:
-        linear-gradient(
-          145deg,
-          #332941,
-          #15121c
-        );
-
-      border: 1px solid rgba(180,120,255,0.35);
-
-      box-shadow:
-        0 0 15px rgba(120,70,180,0.20);
-
-      flex-shrink: 0;
+      font-size: 20px;
+      box-shadow: 0 0 15px rgba(130,40,220,0.25);
     }
 
-    .player-text {
-      min-width: 0;
+    .user-info {
+      line-height: 1.5;
     }
 
-    .player-name {
-      font-size: 14px;
+    .username {
+      font-size: 13px;
       font-weight: bold;
-
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
 
-    .player-level {
-      margin-top: 4px;
-
+    .league {
       font-size: 10px;
-
-      color: #9f94ad;
+      color: #aaa2b7;
     }
 
-    /* =========================
-       STATS
-    ========================= */
-
-    .stats {
+    .header-stats {
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin-left: 10px;
+      gap: 11px;
     }
 
     .stat {
       display: flex;
       align-items: center;
       gap: 4px;
-
       font-size: 12px;
-
       color: #ddd;
     }
 
-    .stat-icon {
-      font-size: 15px;
-    }
-
     .menu-btn {
-      width: 40px;
-      height: 40px;
-
+      width: 38px;
+      height: 38px;
       border: 0;
       border-radius: 12px;
-
-      background: rgba(255,255,255,0.05);
-
+      background: rgba(255,255,255,0.06);
       color: white;
-
       font-size: 21px;
-
       cursor: pointer;
-
-      margin-right: 8px;
-    }
-
-    .menu-btn:active {
-      transform: scale(0.94);
-      background: rgba(255,255,255,0.09);
-    }
-
-    /* =========================
-       CONTENT
-    ========================= */
-
-    .content {
-      padding: 25px 16px;
     }
 
     .page {
       display: none;
+      min-height: calc(100vh - 145px);
+      padding: 22px 15px 105px;
     }
 
     .page.active {
       display: block;
     }
 
-    /* =========================
-       GAME TITLE
-    ========================= */
-
-    .game-title {
-      text-align: center;
-      margin-top: 10px;
-      margin-bottom: 30px;
+    .page-title {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 6px;
     }
 
-    /* =========================
-       MAFIA LOGO
-    ========================= */
+    .page-subtitle {
+      color: #9e98aa;
+      font-size: 12px;
+      margin-bottom: 22px;
+    }
+
+    .logo-box {
+      text-align: center;
+      margin: 5px auto 22px;
+    }
 
     .mafia-logo {
       position: relative;
-
-      width: 105px;
+      width: 120px;
       height: 105px;
-
-      margin: 0 auto 10px;
-
-      filter:
-        drop-shadow(0 0 18px rgba(135, 75, 210, 0.45))
-        drop-shadow(0 0 35px rgba(70, 40, 120, 0.25));
+      margin: auto;
+      filter: drop-shadow(0 0 18px rgba(150,50,230,0.35));
     }
 
     .mafia-shadow {
       position: absolute;
-
-      width: 100px;
-      height: 100px;
-
-      top: 3px;
-      left: 3px;
-
+      width: 82px;
+      height: 82px;
       border-radius: 50%;
-
-      background:
-        radial-gradient(
-          circle,
-          rgba(125, 75, 180, 0.28) 0%,
-          rgba(80, 45, 125, 0.12) 38%,
-          transparent 72%
-        );
-
-      filter: blur(7px);
+      background: #10091a;
+      left: 19px;
+      top: 16px;
     }
 
     .mafia-head {
       position: absolute;
-
-      width: 52px;
-      height: 63px;
-
-      top: 27px;
-      left: 27px;
-
-      border-radius: 45% 45% 48% 48%;
-
-      background:
-        linear-gradient(
-          145deg,
-          #343141 0%,
-          #171620 55%,
-          #08080d 100%
-        );
-
-      box-shadow:
-        inset -8px -5px 15px rgba(0,0,0,0.7),
-        inset 5px 3px 10px rgba(255,255,255,0.04);
+      width: 40px;
+      height: 48px;
+      background: #17111f;
+      border-radius: 50% 50% 44% 44%;
+      left: 40px;
+      top: 28px;
     }
 
     .mafia-hat {
       position: absolute;
-
-      width: 72px;
-      height: 23px;
-
-      top: 18px;
-      left: 16px;
-
-      background:
-        linear-gradient(
-          180deg,
-          #302d3b,
-          #0b0b11
-        );
-
-      border-radius: 50% 50% 20% 20%;
-
-      transform: rotate(-3deg);
-
-      box-shadow:
-        0 7px 12px rgba(0,0,0,0.55);
-    }
-
-    .mafia-hat::after {
-      content: "";
-
-      position: absolute;
-
-      width: 91px;
-      height: 9px;
-
-      left: -10px;
-      bottom: -4px;
-
+      width: 74px;
+      height: 18px;
+      background: #17111f;
+      left: 23px;
+      top: 21px;
       border-radius: 50%;
-
-      background:
-        linear-gradient(
-          180deg,
-          #25222e,
-          #09090e
-        );
+      transform: rotate(-5deg);
     }
 
     .mafia-eye {
       position: absolute;
-
-      width: 6px;
-      height: 3px;
-
-      top: 54px;
-
+      width: 5px;
+      height: 4px;
+      background: #b75cff;
       border-radius: 50%;
-
-      background: #d7b5ff;
-
-      box-shadow:
-        0 0 7px rgba(190,130,255,0.9);
+      top: 49px;
+      box-shadow: 0 0 7px #a43dff;
     }
 
     .eye-one {
-      left: 40px;
+      left: 51px;
     }
 
     .eye-two {
-      left: 58px;
+      left: 65px;
     }
 
     .mafia-collar {
       position: absolute;
-
-      width: 72px;
+      width: 55px;
       height: 30px;
-
-      left: 16px;
-      top: 77px;
-
-      background:
-        linear-gradient(
-          145deg,
-          #25222e,
-          #09090e
-        );
-
-      clip-path:
-        polygon(
-          0 100%,
-          18% 0,
-          50% 35%,
-          82% 0,
-          100% 100%
-        );
-
-      box-shadow:
-        0 5px 15px rgba(0,0,0,0.5);
+      background: #17111f;
+      left: 32px;
+      top: 69px;
+      clip-path: polygon(0 0, 50% 45%, 100% 0, 82% 100%, 18% 100%);
     }
 
-    .game-title h1 {
-      font-size: 29px;
-
-      letter-spacing: 1px;
-
-      margin-top: 3px;
-
-      background:
-        linear-gradient(
-          180deg,
-          #ffffff,
-          #bda9d2
-        );
-
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .game-title p {
-      margin-top: 8px;
-
-      font-size: 12px;
-
-      color: #89818f;
-    }
-
-    /* =========================
-       GAME CARDS
-    ========================= */
-
-    .game-list {
-      display: flex;
-      flex-direction: column;
+    .games-grid {
+      display: grid;
       gap: 13px;
     }
 
     .game-card {
       position: relative;
-
-      width: 100%;
-      min-height: 84px;
-
-      display: flex;
-      align-items: center;
-
-      padding: 14px 16px;
-
-      border-radius: 18px;
-
-      border: 1px solid rgba(255,255,255,0.07);
-
+      min-height: 100px;
+      padding: 17px;
+      border-radius: 19px;
       background:
-        linear-gradient(
-          135deg,
-          rgba(35,31,45,0.88),
-          rgba(15,14,21,0.90)
-        );
-
-      box-shadow:
-        0 10px 25px rgba(0,0,0,0.20);
-
+        linear-gradient(135deg, rgba(35,21,53,0.95), rgba(13,12,22,0.95));
+      border: 1px solid rgba(160,80,230,0.18);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.25);
       cursor: pointer;
-
       overflow: hidden;
-
-      transition:
-        transform 0.15s,
-        border 0.15s,
-        background 0.15s;
     }
-
-    .game-card::before {
-      content: "";
-
-      position: absolute;
-
-      width: 100px;
-      height: 100px;
-
-      right: -50px;
-      top: -50px;
-
-      background: rgba(130,75,190,0.14);
-
-      filter: blur(25px);
-
-      border-radius: 50%;
-    }
-
-    .game-card:active {
-      transform: scale(0.98);
-
-      border-color:
-        rgba(165,105,230,0.35);
-
-      background:
-        linear-gradient(
-          135deg,
-          rgba(44,37,57,0.95),
-          rgba(18,16,25,0.95)
-        );
-    }
-
-    .game-icon {
-      width: 52px;
-      height: 52px;
-
-      border-radius: 15px;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      font-size: 25px;
-
-      background:
-        linear-gradient(
-          145deg,
-          #2c2339,
-          #15121d
-        );
-
-      border: 1px solid rgba(170,110,230,0.20);
-
-      margin-left: 13px;
-
-      flex-shrink: 0;
-    }
-
-    .game-info {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .game-info h3 {
-      font-size: 15px;
-
-      margin-bottom: 7px;
-    }
-
-    .game-info p {
-      font-size: 11px;
-
-      color: #817987;
-
-      line-height: 1.5;
-    }
-
-    .game-arrow {
-      font-size: 22px;
-
-      color: #786c83;
-
-      margin-right: 8px;
-    }
-
-    /* =========================
-       LOCKED GAME
-    ========================= */
 
     .game-card.locked {
-      opacity: 0.45;
-
+      opacity: 0.42;
       cursor: default;
     }
 
-    .game-card.locked:active {
-      transform: none;
+    .game-icon {
+      font-size: 28px;
+      margin-bottom: 7px;
     }
 
-    .lock {
+    .game-title {
+      font-size: 17px;
+      font-weight: bold;
+    }
+
+    .game-desc {
+      color: #9f98a8;
+      font-size: 11px;
+      margin-top: 5px;
+    }
+
+    .coming {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      font-size: 9px;
+      padding: 5px 8px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.06);
+      color: #aaa;
+    }
+
+    .back-btn {
+      border: 0;
+      background: rgba(255,255,255,0.06);
+      color: #ddd;
+      padding: 9px 13px;
+      border-radius: 11px;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+
+    .type-grid {
+      display: grid;
+      gap: 15px;
+    }
+
+    .type-card {
+      padding: 25px 18px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #21142f, #0e0c15);
+      border: 1px solid rgba(170,80,240,0.2);
+      cursor: pointer;
+      text-align: center;
+      transition: 0.2s;
+    }
+
+    .type-card:active {
+      transform: scale(0.97);
+    }
+
+    .type-icon {
+      font-size: 38px;
+      margin-bottom: 12px;
+    }
+
+    .type-title {
       font-size: 18px;
-
-      color: #8c8394;
-
-      margin-right: 8px;
+      font-weight: bold;
     }
 
-    /* =========================
-       OTHER PAGES
-    ========================= */
+    .type-desc {
+      margin-top: 7px;
+      color: #9993a4;
+      font-size: 11px;
+    }
 
-    .empty-box {
-      min-height: 300px;
+    .role-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
 
+    .selected-game {
+      font-size: 12px;
+      color: #aaa;
+    }
+
+    .coin-box {
+      background: rgba(255,196,0,0.08);
+      border: 1px solid rgba(255,196,0,0.18);
+      padding: 7px 10px;
+      border-radius: 10px;
+      font-size: 11px;
+    }
+
+    .random-role {
+      width: 100%;
+      padding: 15px;
+      border: 1px solid rgba(180,90,255,0.35);
+      border-radius: 17px;
+      background: linear-gradient(135deg, #321452, #160d20);
+      color: white;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 24px;
+    }
+
+    .random-role small {
+      display: block;
+      color: #aaa;
+      font-size: 10px;
+      font-weight: normal;
+      margin-top: 5px;
+    }
+
+    .faction {
+      margin-bottom: 22px;
+    }
+
+    .faction-title {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .roles-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .role-card {
+      min-height: 118px;
+      padding: 12px;
+      border-radius: 15px;
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.08);
+      cursor: pointer;
+      position: relative;
+      transition: 0.15s;
+    }
+
+    .role-card:active {
+      transform: scale(0.97);
+    }
+
+    .role-card.taken {
+      opacity: 0.38;
+      cursor: default;
+    }
+
+    .role-card.selected {
+      border-color: #a044ff;
+      box-shadow: 0 0 16px rgba(160,60,255,0.18);
+      background: rgba(100,30,150,0.14);
+    }
+
+    .role-emoji {
+      font-size: 25px;
+      margin-bottom: 7px;
+    }
+
+    .role-name {
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .role-desc {
+      font-size: 9px;
+      color: #918b9b;
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+
+    .role-price {
+      position: absolute;
+      left: 8px;
+      bottom: 8px;
+      font-size: 9px;
+      color: #ffd34e;
+    }
+
+    .taken-label {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 6px;
+      padding: 4px 6px;
+      font-size: 8px;
+      color: #aaa;
+    }
+
+    .confirm-box {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 17px;
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.07);
+      display: none;
+    }
+
+    .confirm-box.show {
+      display: block;
+    }
+
+    .confirm-role {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .confirm-text {
+      color: #999;
+      font-size: 10px;
+      margin-bottom: 13px;
+    }
+
+    .confirm-btn {
+      width: 100%;
+      padding: 13px;
+      border: 0;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #8e35d7, #59219a);
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .lobby-header {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .lobby-status {
+      display: inline-block;
+      margin-top: 8px;
+      color: #b77aff;
+      font-size: 12px;
+    }
+
+    .players-count {
+      font-size: 30px;
+      font-weight: bold;
+      margin-top: 8px;
+    }
+
+    .players-count span {
+      color: #777;
+      font-size: 18px;
+    }
+
+    .player-slots {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+      margin-bottom: 20px;
+    }
+
+    .player-slot {
+      min-height: 72px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.06);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      gap: 5px;
+    }
 
-      text-align: center;
+    .slot-avatar {
+      width: 29px;
+      height: 29px;
+      border-radius: 50%;
+      background: #21162d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
 
-      border-radius: 22px;
+    .slot-name {
+      font-size: 9px;
+      color: #aaa;
+    }
 
-      background:
-        rgba(20,18,27,0.72);
+    .slot-empty {
+      color: #555;
+      font-size: 20px;
+    }
 
+    .chat-box {
+      border-radius: 18px;
+      background: rgba(255,255,255,0.025);
       border: 1px solid rgba(255,255,255,0.06);
+      overflow: hidden;
     }
 
-    .empty-icon {
-      font-size: 42px;
-      margin-bottom: 15px;
-    }
-
-    .empty-box h2 {
-      font-size: 18px;
-      margin-bottom: 8px;
-    }
-
-    .empty-box p {
+    .chat-title {
+      padding: 12px;
       font-size: 12px;
-      color: #827987;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
     }
 
-    /* =========================
-       BOTTOM NAV
-    ========================= */
+    .messages {
+      height: 160px;
+      padding: 12px;
+      color: #888;
+      font-size: 10px;
+      overflow-y: auto;
+    }
+
+    .chat-input {
+      display: flex;
+      gap: 7px;
+      padding: 8px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .chat-input input {
+      flex: 1;
+      min-width: 0;
+      background: rgba(255,255,255,0.05);
+      border: 0;
+      outline: none;
+      color: white;
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+    .chat-input button {
+      width: 42px;
+      border: 0;
+      border-radius: 10px;
+      background: #67269d;
+      color: white;
+    }
+
+    .simple-box {
+      padding: 25px 15px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.06);
+      text-align: center;
+      color: #aaa;
+      font-size: 13px;
+      line-height: 2;
+    }
 
     .bottom-nav {
       position: fixed;
-
-      z-index: 20;
-
       bottom: 0;
-      left: 50%;
-
-      transform: translateX(-50%);
-
-      width: 100%;
-      max-width: 520px;
-
-      height: 75px;
-
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-
-      padding: 7px 5px 9px;
-
-      background:
-        rgba(11,10,16,0.94);
-
-      border-top:
-        1px solid rgba(255,255,255,0.07);
-
-      backdrop-filter: blur(18px);
+      right: 0;
+      left: 0;
+      height: 70px;
+      background: rgba(8,7,13,0.94);
+      backdrop-filter: blur(15px);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      z-index: 30;
     }
 
     .nav-item {
-      width: 20%;
-
-      height: 60px;
-
+      border: 0;
+      background: transparent;
+      color: #716b79;
+      font-size: 10px;
+      cursor: pointer;
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
-
+      align-items: center;
       gap: 5px;
-
-      color: #716a77;
-
-      font-size: 9px;
-
-      cursor: pointer;
-
-      position: relative;
-
-      transition: 0.2s;
     }
 
     .nav-icon {
       font-size: 20px;
-
-      line-height: 1;
     }
 
     .nav-item.active {
-      color: #d7b9ef;
+      color: #bd70ff;
     }
-
-    .nav-item.active::before {
-      content: "";
-
-      position: absolute;
-
-      top: 0;
-
-      width: 30px;
-      height: 3px;
-
-      border-radius: 10px;
-
-      background: #a76bda;
-
-      box-shadow:
-        0 0 12px rgba(170,100,230,0.8);
-    }
-
-    /* =========================
-       MENU
-    ========================= */
 
     .menu-overlay {
       position: fixed;
-
       inset: 0;
-
-      z-index: 50;
-
-      background:
-        rgba(0,0,0,0.55);
-
-      backdrop-filter: blur(5px);
-
+      background: rgba(0,0,0,0.65);
+      z-index: 100;
       display: none;
     }
 
@@ -784,587 +613,266 @@
       display: block;
     }
 
-    .menu-panel {
+    .side-menu {
       position: absolute;
-
-      top: 65px;
-      left: 15px;
-      right: 15px;
-
-      max-width: 490px;
-
-      margin: auto;
-
-      padding: 12px;
-
-      border-radius: 18px;
-
-      background:
-        linear-gradient(
-          145deg,
-          #1d1924,
-          #100f15
-        );
-
-      border:
-        1px solid rgba(255,255,255,0.08);
-
-      box-shadow:
-        0 20px 50px rgba(0,0,0,0.55);
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 78%;
+      max-width: 330px;
+      background: #100d16;
+      padding: 25px 18px;
+      box-shadow: -10px 0 30px rgba(0,0,0,0.35);
     }
 
-    .menu-item {
-      padding: 15px;
+    .side-menu h2 {
+      margin-bottom: 20px;
+    }
 
-      border-radius: 12px;
-
-      display: flex;
-      align-items: center;
-
-      gap: 12px;
-
+    .menu-option {
+      padding: 15px 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      color: #ccc;
       font-size: 13px;
-
-      color: #ddd;
-
-      cursor: pointer;
     }
 
-    .menu-item:active {
-      background: rgba(255,255,255,0.05);
-    }
-
-    /* =========================
-       DESKTOP
-    ========================= */
-
-    @media (min-width: 600px) {
-
+    @media (min-width: 700px) {
       body {
-        background: #030307;
+        max-width: 600px;
+        margin: auto;
+        border-left: 1px solid rgba(255,255,255,0.04);
+        border-right: 1px solid rgba(255,255,255,0.04);
       }
 
-      .app {
-        background:
-          rgba(7,7,12,0.45);
-
-        min-height: 100vh;
-
-        box-shadow:
-          0 0 80px rgba(0,0,0,0.5);
+      .bottom-nav {
+        max-width: 600px;
+        margin: auto;
       }
-
     }
-
   </style>
 </head>
 
 <body>
 
-  <!-- =========================
-       BACKGROUND
-  ========================= -->
+<header class="header">
 
-  <div class="background">
+  <div class="profile-mini">
+    <div class="avatar">👤</div>
 
-    <div class="light-top"></div>
-    <div class="light-right"></div>
-    <div class="light-bottom"></div>
-
-    <div class="fog one"></div>
-    <div class="fog two"></div>
-
+    <div class="user-info">
+      <div class="username">بازیکن</div>
+      <div class="league">سطح ۱</div>
+    </div>
   </div>
 
+  <div class="header-stats">
+    <div class="stat">🪙 <span id="coinCount">5</span></div>
+    <div class="stat">⭐ <span>0</span></div>
+    <button class="menu-btn" onclick="openMenu()">☰</button>
+  </div>
 
-  <!-- =========================
-       MAIN APP
-  ========================= -->
-
-  <div class="app">
-
-
-    <!-- =========================
-         TOP BAR
-    ========================= -->
-
-    <div class="top-bar">
-
-      <div class="player-info">
-
-        <div class="avatar">
-          👤
-        </div>
-
-        <div class="player-text">
-
-          <div class="player-name">
-            بازیکن
-          </div>
-
-          <div class="player-level">
-            سطح ۱
-          </div>
-
-        </div>
-
-      </div>
+</header>
 
 
-      <div class="stats">
+<!-- بازی‌ها -->
 
-        <div class="stat">
-          <span class="stat-icon">🪙</span>
-          <span>0</span>
-        </div>
+<section id="games" class="page active">
 
-        <div class="stat">
-          <span class="stat-icon">⭐</span>
-          <span>0</span>
-        </div>
+  <div class="logo-box">
+    <div class="mafia-logo">
+      <div class="mafia-shadow"></div>
+      <div class="mafia-head"></div>
+      <div class="mafia-hat"></div>
+      <div class="mafia-eye eye-one"></div>
+      <div class="mafia-eye eye-two"></div>
+      <div class="mafia-collar"></div>
+    </div>
+  </div>
 
-      </div>
+  <div class="page-title">بازی‌ها</div>
+  <div class="page-subtitle">بازی مورد نظر خودت را انتخاب کن</div>
 
+  <div class="games-grid">
 
-      <button
-        class="menu-btn"
-        onclick="openMenu()"
-      >
-        ☰
-      </button>
-
+    <div class="game-card" onclick="openGameType(9)">
+      <div class="game-icon">🎭</div>
+      <div class="game-title">مافیا ۹ نفره</div>
+      <div class="game-desc">بازی سریع و کلاسیک</div>
     </div>
 
+    <div class="game-card" onclick="openGameType(12)">
+      <div class="game-icon">🎭</div>
+      <div class="game-title">مافیا ۱۲ نفره</div>
+      <div class="game-desc">بازی کامل‌تر با نقش‌های بیشتر</div>
+    </div>
 
+    <div class="game-card locked">
+      <div class="coming">به‌زودی</div>
+      <div class="game-icon">🔒</div>
+      <div class="game-title">مافیا ۲۳ نفره</div>
+      <div class="game-desc">به‌زودی فعال می‌شود</div>
+    </div>
 
-    <!-- =========================
-         CONTENT
-    ========================= -->
+    <div class="game-card locked">
+      <div class="coming">به‌زودی</div>
+      <div class="game-icon">🔒</div>
+      <div class="game-title">مافیا ۲۵ نفره</div>
+      <div class="game-desc">به‌زودی فعال می‌شود</div>
+    </div>
 
-    <main class="content">
+  </div>
 
+</section>
 
-      <!-- =========================
-           GAMES
-      ========================= -->
 
-      <section
-        id="games"
-        class="page active"
-      >
+<!-- انتخاب نوع بازی -->
 
-        <div class="game-title">
+<section id="gameType" class="page">
 
+  <button class="back-btn" onclick="goHome()">← برگشت</button>
 
-          <!-- MAFIA LOGO -->
+  <div class="page-title" id="gameTypeTitle">مافیا ۹ نفره</div>
 
-          <div class="mafia-logo">
+  <div class="page-subtitle">
+    نوع بازی را انتخاب کن
+  </div>
 
-            <div class="mafia-shadow"></div>
+  <div class="type-grid">
 
-            <div class="mafia-head"></div>
-
-            <div class="mafia-hat"></div>
-
-            <div class="mafia-eye eye-one"></div>
-
-            <div class="mafia-eye eye-two"></div>
-
-            <div class="mafia-collar"></div>
-
-          </div>
-
-
-          <h1>
-            مافیا
-          </h1>
-
-          <p>
-            حالت بازی خودت رو انتخاب کن
-          </p>
-
-        </div>
-
-
-
-        <div class="game-list">
-
-
-          <!-- 9 PLAYERS -->
-
-          <div
-            class="game-card"
-            onclick="startGame(9)"
-          >
-
-            <div class="game-icon">
-              🎭
-            </div>
-
-            <div class="game-info">
-
-              <h3>
-                مافیا ۹ نفره
-              </h3>
-
-              <p>
-                بازی کلاسیک با ۹ بازیکن
-              </p>
-
-            </div>
-
-            <div class="game-arrow">
-              ‹
-            </div>
-
-          </div>
-
-
-
-          <!-- 12 PLAYERS -->
-
-          <div
-            class="game-card"
-            onclick="startGame(12)"
-          >
-
-            <div class="game-icon">
-              🎭
-            </div>
-
-            <div class="game-info">
-
-              <h3>
-                مافیا ۱۲ نفره
-              </h3>
-
-              <p>
-                بازی حرفه‌ای با ۱۲ بازیکن
-              </p>
-
-            </div>
-
-            <div class="game-arrow">
-              ‹
-            </div>
-
-          </div>
-
-
-
-          <!-- 23 PLAYERS -->
-
-          <div
-            class="game-card locked"
-          >
-
-            <div class="game-icon">
-              🔒
-            </div>
-
-            <div class="game-info">
-
-              <h3>
-                مافیا ۲۳ نفره
-              </h3>
-
-              <p>
-                به‌زودی فعال می‌شود
-              </p>
-
-            </div>
-
-            <div class="lock">
-              🔒
-            </div>
-
-          </div>
-
-
-
-          <!-- 25 PLAYERS -->
-
-          <div
-            class="game-card locked"
-          >
-
-            <div class="game-icon">
-              🔒
-            </div>
-
-            <div class="game-info">
-
-              <h3>
-                مافیا ۲۵ نفره
-              </h3>
-
-              <p>
-                به‌زودی فعال می‌شود
-              </p>
-
-            </div>
-
-            <div class="lock">
-              🔒
-            </div>
-
-          </div>
-
-
-        </div>
-
-      </section>
-
-
-
-      <!-- =========================
-           FRIENDS
-      ========================= -->
-
-      <section
-        id="friends"
-        class="page"
-      >
-
-        <div class="empty-box">
-
-          <div class="empty-icon">
-            👥
-          </div>
-
-          <h2>
-            دوستان
-          </h2>
-
-          <p>
-            لیست دوستان و درخواست‌های دوستی
-          </p>
-
-        </div>
-
-      </section>
-
-
-
-      <!-- =========================
-           CHAT
-      ========================= -->
-
-      <section
-        id="chat"
-        class="page"
-      >
-
-        <div class="empty-box">
-
-          <div class="empty-icon">
-            💬
-          </div>
-
-          <h2>
-            گفتگو
-          </h2>
-
-          <p>
-            پیام‌ها و گفتگوهای شما
-          </p>
-
-        </div>
-
-      </section>
-
-
-
-      <!-- =========================
-           LEADERBOARD
-      ========================= -->
-
-      <section
-        id="leaderboard"
-        class="page"
-      >
-
-        <div class="empty-box">
-
-          <div class="empty-icon">
-            🏆
-          </div>
-
-          <h2>
-            برترین‌ها
-          </h2>
-
-          <p>
-            جدول رتبه‌بندی بازیکنان
-          </p>
-
-        </div>
-
-      </section>
-
-
-
-      <!-- =========================
-           PROFILE
-      ========================= -->
-
-      <section
-        id="profile"
-        class="page"
-      >
-
-        <div class="empty-box">
-
-          <div class="empty-icon">
-            👤
-          </div>
-
-          <h2>
-            پروفایل
-          </h2>
-
-          <p>
-            اطلاعات و آمار بازیکن
-          </p>
-
-        </div>
-
-      </section>
-
-
-    </main>
-
-
-    <!-- =========================
-         BOTTOM NAVIGATION
-    ========================= -->
-
-    <nav class="bottom-nav">
-
-
-      <div
-        class="nav-item active"
-        onclick="showPage('games', this)"
-      >
-
-        <div class="nav-icon">
-          🎮
-        </div>
-
-        <span>
-          بازی‌ها
-        </span>
-
+    <div class="type-card" onclick="openPublicGame()">
+      <div class="type-icon">🌐</div>
+      <div class="type-title">بازی عمومی</div>
+      <div class="type-desc">
+        با بازیکنان آنلاین وارد یک لابی عمومی شو
       </div>
+    </div>
 
-
-      <div
-        class="nav-item"
-        onclick="showPage('friends', this)"
-      >
-
-        <div class="nav-icon">
-          👥
-        </div>
-
-        <span>
-          دوستان
-        </span>
-
+    <div class="type-card" onclick="openFriendsGame()">
+      <div class="type-icon">👥</div>
+      <div class="type-title">بازی با دوستان</div>
+      <div class="type-desc">
+        یک اتاق بساز و دوستانت را دعوت کن
       </div>
+    </div>
+
+  </div>
+
+</section>
 
 
-      <div
-        class="nav-item"
-        onclick="showPage('chat', this)"
-      >
+<!-- انتخاب نقش عمومی -->
 
-        <div class="nav-icon">
-          💬
-        </div>
+<section id="publicRoles" class="page">
 
-        <span>
-          گفتگو
-        </span>
+  <button class="back-btn" onclick="backToGameType()">← برگشت</button>
 
+  <div class="role-top">
+
+    <div>
+      <div class="page-title">انتخاب نقش</div>
+
+      <div class="selected-game" id="roleGameTitle">
+        مافیا ۹ نفره
       </div>
+    </div>
 
-
-      <div
-        class="nav-item"
-        onclick="showPage('leaderboard', this)"
-      >
-
-        <div class="nav-icon">
-          🏆
-        </div>
-
-        <span>
-          برترین‌ها
-        </span>
-
-      </div>
-
-
-      <div
-        class="nav-item"
-        onclick="showPage('profile', this)"
-      >
-
-        <div class="nav-icon">
-          👤
-        </div>
-
-        <span>
-          پروفایل
-        </span>
-
-      </div>
-
-
-    </nav>
+    <div class="coin-box">
+      🪙 <span id="roleCoinCount">5</span>
+    </div>
 
   </div>
 
 
+  <button class="random-role" onclick="chooseRandomRole()">
 
-  <!-- =========================
-       MENU OVERLAY
-  ========================= -->
+    🎲 نقش تصادفی
 
-  <div
-    id="menuOverlay"
-    class="menu-overlay"
-    onclick="closeMenu(event)"
-  >
+    <small>
+      رایگان — سیستم یک نقش آزاد را به صورت تصادفی انتخاب می‌کند
+    </small>
 
-    <div
-      class="menu-panel"
-      onclick="event.stopPropagation()"
-    >
+  </button>
 
-      <div
-        class="menu-item"
-        onclick="alert('تنظیمات')"
-      >
-        ⚙️
-        تنظیمات
+
+  <!-- شهر -->
+
+  <div class="faction">
+
+    <div class="faction-title">
+      🏙️ <strong>شهر</strong>
+    </div>
+
+    <div class="roles-grid">
+
+      <div class="role-card"
+           data-role="دکتر"
+           onclick="selectRole(this)">
+        <div class="role-emoji">🩺</div>
+        <div class="role-name">دکتر</div>
+        <div class="role-desc">
+          هر شب می‌تواند یک بازیکن را نجات دهد.
+        </div>
+        <div class="role-price">🪙 ۵ سکه</div>
       </div>
 
-      <div
-        class="menu-item"
-        onclick="alert('اعلان‌ها')"
-      >
-        🔔
-        اعلان‌ها
+
+      <div class="role-card"
+           data-role="بازپرس"
+           onclick="selectRole(this)">
+        <div class="role-emoji">🔍</div>
+        <div class="role-name">بازپرس</div>
+        <div class="role-desc">
+          با توانایی مخصوص خود اطلاعات به دست می‌آورد.
+        </div>
+        <div class="role-price">🪙 ۵ سکه</div>
       </div>
 
-      <div
-        class="menu-item"
-        onclick="alert('درباره بازی')"
-      >
-        ℹ️
-        درباره بازی
+
+      <div class="role-card"
+           data-role="اسنایپر"
+           onclick="selectRole(this)">
+        <div class="role-emoji">🔫</div>
+        <div class="role-name">اسنایپر</div>
+        <div class="role-desc">
+          یک نقش تهاجمی در تیم شهر.
+        </div>
+        <div class="role-price">🪙 ۵ سکه</div>
+      </div>
+
+
+      <div class="role-card"
+           data-role="کارآگاه"
+           onclick="selectRole(this)">
+        <div class="role-emoji">🕵️</div>
+        <div class="role-name">کارآگاه</div>
+        <div class="role-desc">
+          در پیدا کردن اعضای مافیا کمک می‌کند.
+        </div>
+        <div class="role-price">🪙 ۵ سکه</div>
+      </div>
+
+
+      <div class="role-card"
+           data-role="ساحره"
+           onclick="selectRole(this)">
+        <div class="role-emoji">🧚</div>
+        <div class="role-name">ساحره</div>
+        <div class="role-desc">
+          دارای توانایی ویژه در طول شب.
+        </div>
+        <div class="role-price">🪙 ۵ سکه</div>
+      </div>
+
+
+      <div class="role-card"
+           data-role="شهروند ساده"
+           onclick="selectRole(this)">
+        <div class="role-emoji">👤</div>
+        <div class="role-name">شهروند ساده</div>
+        <div class="role-desc">
+          عضو عادی تیم شهر.
+        </div>
+        <div class="role-price">🪙 ۵ سکه</div>
       </div>
 
     </div>
@@ -1372,94 +880,872 @@
   </div>
 
 
+  <!-- مافیا -->
 
-  <!-- =========================
-       JAVASCRIPT
-  ========================= -->
+  <div class="faction">
 
-  <script>
+    <div class="faction-title">
+      🔪 <strong>مافیا</strong>
+    </div>
 
-    function showPage(pageId, element) {
+    <div class="roles-grid">
 
-      const pages =
-        document.querySelectorAll('.page');
+      <div class="role-card"
+           data-role="پدرخوانده"
+           onclick="selectRole(this)">
 
-      pages.forEach(function(page) {
+        <div class="role-emoji">🚬</div>
 
-        page.classList.remove('active');
+        <div class="role-name">پدرخوانده</div>
 
-      });
+        <div class="role-desc">
+          رهبر تیم مافیا.
+        </div>
 
+        <div class="role-price">🪙 ۵ سکه</div>
 
-      const selectedPage =
-        document.getElementById(pageId);
-
-      if (selectedPage) {
-
-        selectedPage.classList.add('active');
-
-      }
+      </div>
 
 
-      const navItems =
-        document.querySelectorAll('.nav-item');
+      <div class="role-card"
+           data-role="نوچه مافیا"
+           onclick="selectRole(this)">
 
-      navItems.forEach(function(item) {
+        <div class="role-emoji">🔪</div>
 
-        item.classList.remove('active');
+        <div class="role-name">نوچه مافیا</div>
 
-      });
+        <div class="role-desc">
+          عضو تیم مافیا و همراه پدرخوانده.
+        </div>
+
+        <div class="role-price">🪙 ۵ سکه</div>
+
+      </div>
+
+    </div>
+
+  </div>
 
 
-      if (element) {
+  <!-- مستقل -->
 
-        element.classList.add('active');
+  <div class="faction">
 
-      }
+    <div class="faction-title">
+      🃏 <strong>مستقل</strong>
+    </div>
+
+    <div class="roles-grid">
+
+      <div class="role-card"
+           data-role="جوکر"
+           onclick="selectRole(this)">
+
+        <div class="role-emoji">🃏</div>
+
+        <div class="role-name">جوکر</div>
+
+        <div class="role-desc">
+          یک نقش مستقل.
+        </div>
+
+        <div class="role-price">🪙 ۵ سکه</div>
+
+      </div>
+
+
+      <div class="role-card"
+           data-role="قاتل سریالی"
+           onclick="selectRole(this)">
+
+        <div class="role-emoji">☠️</div>
+
+        <div class="role-name">قاتل سریالی</div>
+
+        <div class="role-desc">
+          نقش مستقل و خطرناک.
+        </div>
+
+        <div class="role-price">🪙 ۵ سکه</div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div id="confirmBox" class="confirm-box">
+
+    <div class="confirm-role" id="selectedRoleName">
+      دکتر
+    </div>
+
+    <div class="confirm-text" id="selectedRoleText">
+      برای انتخاب این نقش ۵ سکه پرداخت می‌شود.
+    </div>
+
+    <button class="confirm-btn" onclick="confirmRole()">
+      انتخاب نقش و ورود به لابی
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- لابی عمومی -->
+
+<section id="publicLobby" class="page">
+
+  <button class="back-btn" onclick="backToRoles()">
+    ← تغییر نقش
+  </button>
+
+  <div class="lobby-header">
+
+    <div class="page-title">
+      در حال پیدا کردن بازیکن
+    </div>
+
+    <div class="lobby-status">
+      🌐 لابی عمومی
+    </div>
+
+    <div class="players-count">
+      <span id="currentPlayers">1</span>
+      <span>/</span>
+      <span id="maxPlayers">9</span>
+    </div>
+
+  </div>
+
+
+  <div class="player-slots" id="playerSlots"></div>
+
+
+  <div class="chat-box">
+
+    <div class="chat-title">
+      💬 چت لابی
+    </div>
+
+    <div class="messages" id="messages">
+      بازیکنان می‌توانند تا قبل از شروع بازی با هم چت کنند.
+    </div>
+
+    <div class="chat-input">
+
+      <input
+        id="chatInput"
+        type="text"
+        placeholder="پیامت را بنویس..."
+      >
+
+      <button onclick="sendMessage()">➤</button>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- دوستان -->
+
+<section id="friendsGame" class="page">
+
+  <button class="back-btn" onclick="backToGameType()">
+    ← برگشت
+  </button>
+
+  <div class="page-title">
+    بازی با دوستان
+  </div>
+
+  <div class="simple-box">
+    👥
+    <br>
+    این بخش برای ساخت اتاق خصوصی، دعوت حداکثر ۳ دوست
+    و شروع بازی با دوستان ساخته خواهد شد.
+    <br>
+    <small>
+      انتخاب نقش با سکه در این حالت وجود ندارد.
+    </small>
+  </div>
+
+</section>
+
+
+<!-- دوستان -->
+
+<section id="friends" class="page">
+
+  <div class="page-title">دوستان</div>
+
+  <div class="page-subtitle">
+    لیست دوستانت
+  </div>
+
+  <div class="simple-box">
+    👥
+    <br>
+    هنوز دوستی اضافه نکرده‌ای.
+  </div>
+
+</section>
+
+
+<!-- گفتگو -->
+
+<section id="chat" class="page">
+
+  <div class="page-title">گفتگو</div>
+
+  <div class="page-subtitle">
+    پیام‌ها و گفتگوها
+  </div>
+
+  <div class="simple-box">
+    💬
+    <br>
+    گفتگوها در اینجا نمایش داده می‌شوند.
+  </div>
+
+</section>
+
+
+<!-- برترین‌ها -->
+
+<section id="leaderboard" class="page">
+
+  <div class="page-title">برترین‌ها</div>
+
+  <div class="page-subtitle">
+    بهترین بازیکنان
+  </div>
+
+  <div class="simple-box">
+    🏆
+    <br>
+    جدول برترین بازیکنان به‌زودی فعال می‌شود.
+  </div>
+
+</section>
+
+
+<!-- پروفایل -->
+
+<section id="profile" class="page">
+
+  <div class="page-title">پروفایل</div>
+
+  <div class="page-subtitle">
+    اطلاعات حساب کاربری
+  </div>
+
+  <div class="simple-box">
+    👤
+    <br>
+    بازیکن
+    <br>
+    سطح ۱
+  </div>
+
+</section>
+
+
+<!-- منوی پایین -->
+
+<nav class="bottom-nav">
+
+  <button class="nav-item active"
+          onclick="showPage('games', this)">
+    <div class="nav-icon">🎮</div>
+    بازی‌ها
+  </button>
+
+  <button class="nav-item"
+          onclick="showPage('friends', this)">
+    <div class="nav-icon">👥</div>
+    دوستان
+  </button>
+
+  <button class="nav-item"
+          onclick="showPage('chat', this)">
+    <div class="nav-icon">💬</div>
+    گفتگو
+  </button>
+
+  <button class="nav-item"
+          onclick="showPage('leaderboard', this)">
+    <div class="nav-icon">🏆</div>
+    برترین‌ها
+  </button>
+
+  <button class="nav-item"
+          onclick="showPage('profile', this)">
+    <div class="nav-icon">👤</div>
+    پروفایل
+  </button>
+
+</nav>
+
+
+<!-- منو -->
+
+<div id="menuOverlay"
+     class="menu-overlay"
+     onclick="closeMenu(event)">
+
+  <div class="side-menu">
+
+    <h2>منو</h2>
+
+    <div class="menu-option">⚙️ تنظیمات</div>
+    <div class="menu-option">📜 قوانین بازی</div>
+    <div class="menu-option">❓ راهنما</div>
+    <div class="menu-option">ℹ️ درباره بازی</div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+  let selectedPlayers = 9;
+
+  let selectedRole = null;
+
+  let isRandomRole = false;
+
+  /*
+    فعلاً 5 سکه برای تست گذاشته شده.
+    بعداً این مقدار از حساب واقعی بازیکن می‌آید.
+  */
+  let myCoins = 5;
+
+  /*
+    نقش‌هایی که در همین لابی گرفته شده‌اند.
+    بعداً این قسمت به سرور واقعی وصل می‌شود.
+  */
+  let takenRoles = [];
+
+
+  /*
+    فقط نقش‌هایی که می‌توانند به صورت تصادفی
+    انتخاب شوند.
+  */
+  const randomRoles = [
+    "دکتر",
+    "بازپرس",
+    "اسنایپر",
+    "کارآگاه",
+    "ساحره",
+    "شهروند ساده",
+    "پدرخوانده",
+    "نوچه مافیا",
+    "جوکر",
+    "قاتل سریالی"
+  ];
+
+
+  function hideAllPages() {
+
+    document.querySelectorAll('.page').forEach(function(page) {
+      page.classList.remove('active');
+    });
+
+  }
+
+
+  function showPage(pageId, element) {
+
+    hideAllPages();
+
+    const page = document.getElementById(pageId);
+
+    if (page) {
+      page.classList.add('active');
+    }
+
+    document.querySelectorAll('.nav-item').forEach(function(item) {
+      item.classList.remove('active');
+    });
+
+    if (element) {
+      element.classList.add('active');
+    }
+
+  }
+
+
+  function openGameType(players) {
+
+    selectedPlayers = players;
+
+    hideAllPages();
+
+    document.getElementById('gameTypeTitle').textContent =
+      'مافیا ' + players + ' نفره';
+
+    document.getElementById('gameType').classList.add('active');
+
+    document.querySelectorAll('.nav-item').forEach(function(item) {
+      item.classList.remove('active');
+    });
+
+  }
+
+
+  function goHome() {
+
+    hideAllPages();
+
+    document.getElementById('games').classList.add('active');
+
+    document.querySelectorAll('.nav-item').forEach(function(item) {
+      item.classList.remove('active');
+    });
+
+    document.querySelector('.nav-item').classList.add('active');
+
+  }
+
+
+  function backToGameType() {
+
+    hideAllPages();
+
+    document.getElementById('gameType').classList.add('active');
+
+  }
+
+
+  function openPublicGame() {
+
+    hideAllPages();
+
+    document.getElementById('publicRoles').classList.add('active');
+
+    document.getElementById('roleGameTitle').textContent =
+      'مافیا ' + selectedPlayers + ' نفره';
+
+    document.getElementById('roleCoinCount').textContent =
+      myCoins;
+
+    selectedRole = null;
+    isRandomRole = false;
+
+    document.getElementById('confirmBox')
+      .classList.remove('show');
+
+    updateRoleCards();
+
+  }
+
+
+  /*
+    انتخاب دستی نقش
+  */
+
+  function selectRole(card) {
+
+    const role = card.dataset.role;
+
+    if (takenRoles.includes(role)) {
+
+      alert('این نقش قبلاً در این لابی گرفته شده است.');
+
+      return;
 
     }
 
+    selectedRole = role;
+
+    isRandomRole = false;
+
+    document.querySelectorAll('.role-card').forEach(function(item) {
+      item.classList.remove('selected');
+    });
+
+    card.classList.add('selected');
+
+    document.getElementById('selectedRoleName').textContent =
+      role;
+
+    document.getElementById('selectedRoleText').textContent =
+      'برای انتخاب این نقش ۵ سکه پرداخت می‌شود.';
+
+    document.getElementById('confirmBox')
+      .classList.add('show');
+
+  }
 
 
-    function startGame(players) {
+  /*
+    نقش تصادفی
+    کاملاً رایگان
+  */
+
+  function chooseRandomRole() {
+
+    const availableRoles =
+      randomRoles.filter(function(role) {
+        return !takenRoles.includes(role);
+      });
+
+
+    if (availableRoles.length === 0) {
 
       alert(
-        'انتخاب شد: مافیا ' +
-        players +
-        ' نفره'
+        'تمام نقش‌های قابل انتخاب این لابی گرفته شده‌اند.'
       );
 
-    }
-
-
-
-    function openMenu() {
-
-      const menu =
-        document.getElementById('menuOverlay');
-
-      menu.classList.add('show');
+      return;
 
     }
 
 
+    const randomIndex =
+      Math.floor(Math.random() * availableRoles.length);
 
-    function closeMenu(event) {
 
-      if (
-        event.target.id === 'menuOverlay'
-      ) {
+    selectedRole =
+      availableRoles[randomIndex];
 
-        const menu =
-          document.getElementById('menuOverlay');
 
-        menu.classList.remove('show');
+    isRandomRole = true;
+
+
+    document.querySelectorAll('.role-card').forEach(function(card) {
+
+      card.classList.remove('selected');
+
+      if (card.dataset.role === selectedRole) {
+        card.classList.add('selected');
+      }
+
+    });
+
+
+    document.getElementById('selectedRoleName').textContent =
+      '🎲 ' + selectedRole;
+
+
+    document.getElementById('selectedRoleText').textContent =
+      'این نقش به صورت تصادفی و رایگان برایت انتخاب شده است.';
+
+
+    document.getElementById('confirmBox')
+      .classList.add('show');
+
+  }
+
+
+  /*
+    تأیید نقش
+  */
+
+  function confirmRole() {
+
+    if (!selectedRole) {
+
+      alert('اول یک نقش انتخاب کن.');
+
+      return;
+
+    }
+
+
+    /*
+      اگر تصادفی بوده:
+      هیچ سکه‌ای کم نمی‌شود.
+    */
+
+    if (isRandomRole) {
+
+      if (takenRoles.includes(selectedRole)) {
+
+        alert(
+          'این نقش در همین لحظه توسط بازیکن دیگری گرفته شده است.'
+        );
+
+        updateRoleCards();
+
+        return;
 
       }
 
+
+      takenRoles.push(selectedRole);
+
+      openPublicLobby();
+
+      return;
+
     }
 
-  </script>
+
+    /*
+      انتخاب دستی:
+      ۵ سکه لازم دارد.
+    */
+
+    if (myCoins < 5) {
+
+      alert(
+        'برای خرید این نقش ۵ سکه لازم داری.'
+      );
+
+      return;
+
+    }
+
+
+    /*
+      دوباره بررسی می‌کنیم که نقش
+      در فاصله انتخاب تا تأیید گرفته نشده باشد.
+    */
+
+    if (takenRoles.includes(selectedRole)) {
+
+      alert(
+        'این نقش همین الان توسط بازیکن دیگری گرفته شده است.'
+      );
+
+      updateRoleCards();
+
+      return;
+
+    }
+
+
+    myCoins -= 5;
+
+    takenRoles.push(selectedRole);
+
+
+    updateCoins();
+
+    openPublicLobby();
+
+  }
+
+
+  function updateCoins() {
+
+    document.getElementById('coinCount').textContent =
+      myCoins;
+
+    document.getElementById('roleCoinCount').textContent =
+      myCoins;
+
+  }
+
+
+  /*
+    مشخص کردن نقش‌های گرفته شده
+  */
+
+  function updateRoleCards() {
+
+    document.querySelectorAll('.role-card').forEach(function(card) {
+
+      const role = card.dataset.role;
+
+      card.classList.remove('taken');
+
+      const oldLabel =
+        card.querySelector('.taken-label');
+
+      if (oldLabel) {
+        oldLabel.remove();
+      }
+
+
+      if (takenRoles.includes(role)) {
+
+        card.classList.add('taken');
+
+        const label =
+          document.createElement('div');
+
+        label.className = 'taken-label';
+
+        label.textContent = 'گرفته شده';
+
+        card.appendChild(label);
+
+      }
+
+    });
+
+  }
+
+
+  /*
+    ورود به لابی عمومی
+  */
+
+  function openPublicLobby() {
+
+    hideAllPages();
+
+    document.getElementById('publicLobby')
+      .classList.add('active');
+
+    document.getElementById('maxPlayers')
+      .textContent = selectedPlayers;
+
+    createPlayerSlots();
+
+  }
+
+
+  function createPlayerSlots() {
+
+    const container =
+      document.getElementById('playerSlots');
+
+    container.innerHTML = '';
+
+
+    for (let i = 0; i < selectedPlayers; i++) {
+
+      const slot =
+        document.createElement('div');
+
+      slot.className = 'player-slot';
+
+
+      if (i === 0) {
+
+        slot.innerHTML = `
+          <div class="slot-avatar">👤</div>
+          <div class="slot-name">شما</div>
+        `;
+
+      } else {
+
+        slot.innerHTML = `
+          <div class="slot-empty">+</div>
+          <div class="slot-name">در انتظار...</div>
+        `;
+
+      }
+
+
+      container.appendChild(slot);
+
+    }
+
+
+    document.getElementById('currentPlayers')
+      .textContent = 1;
+
+  }
+
+
+  function backToRoles() {
+
+    hideAllPages();
+
+    document.getElementById('publicRoles')
+      .classList.add('active');
+
+    updateRoleCards();
+
+    updateCoins();
+
+  }
+
+
+  function sendMessage() {
+
+    const input =
+      document.getElementById('chatInput');
+
+    const message =
+      input.value.trim();
+
+
+    if (!message) {
+      return;
+    }
+
+
+    const messages =
+      document.getElementById('messages');
+
+
+    const newMessage =
+      document.createElement('div');
+
+    newMessage.style.marginBottom = '8px';
+
+    newMessage.innerHTML =
+      '<strong style="color:#bd70ff;">شما:</strong> ' +
+      escapeHtml(message);
+
+
+    messages.appendChild(newMessage);
+
+    input.value = '';
+
+    messages.scrollTop =
+      messages.scrollHeight;
+
+  }
+
+
+  function escapeHtml(text) {
+
+    const div =
+      document.createElement('div');
+
+    div.textContent = text;
+
+    return div.innerHTML;
+
+  }
+
+
+  function openFriendsGame() {
+
+    hideAllPages();
+
+    document.getElementById('friendsGame')
+      .classList.add('active');
+
+  }
+
+
+  function openMenu() {
+
+    document.getElementById('menuOverlay')
+      .classList.add('show');
+
+  }
+
+
+  function closeMenu(event) {
+
+    if (event.target.id === 'menuOverlay') {
+
+      document.getElementById('menuOverlay')
+        .classList.remove('show');
+
+    }
+
+  }
+
+
+  updateCoins();
+
+</script>
 
 </body>
 </html>
