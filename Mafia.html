@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <<title>مافیا</title>
+  <title>مافیا</title>
 
   <style>
     body {
@@ -39,6 +39,12 @@
       border-radius: 12px;
       font-size: 18px;
       cursor: pointer;
+      background: #ffffff;
+      color: #111827;
+    }
+
+    button:active {
+      transform: scale(0.97);
     }
   </style>
 </head>
@@ -46,10 +52,17 @@
 <body>
 
   <div class="box">
-    <h1>🎭 مافیای </h1>
-    <p>به بازی مافیای  خوش آمدید</p>
-    <button>شروع بازی</button>
+    <h1>🎭 مافیا</h1>
+    <p>به بازی مافیا خوش آمدید</p>
+
+    <button onclick="startGame()">شروع بازی</button>
   </div>
+
+  <script>
+    function startGame() {
+      alert("بازی مافیا به‌زودی شروع می‌شود 🎭");
+    }
+  </script>
 
 </body>
 </html>
