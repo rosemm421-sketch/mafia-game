@@ -7,145 +7,1456 @@
   <title>مافیا</title>
 
   <style>
+
     * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
-      margin: 0;
-      min-height: 100vh;
-      background:
-        radial-gradient(circle at top, #25213f 0%, #11111f 45%, #080810 100%);
+      font-family: Tahoma, Arial, sans-serif;
+      background: #07070c;
       color: white;
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
+      min-height: 100vh;
+      overflow-x: hidden;
     }
 
-    .container {
+    /* =========================
+       BACKGROUND
+    ========================= */
+
+    .background {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+
+      background:
+        radial-gradient(
+          circle at 50% 5%,
+          rgba(115, 55, 180, 0.20),
+          transparent 35%
+        ),
+        radial-gradient(
+          circle at 100% 45%,
+          rgba(70, 35, 120, 0.14),
+          transparent 38%
+        ),
+        radial-gradient(
+          circle at 0% 100%,
+          rgba(45, 25, 85, 0.16),
+          transparent 40%
+        ),
+        linear-gradient(
+          180deg,
+          #09080f 0%,
+          #08080d 45%,
+          #050509 100%
+        );
+    }
+
+    .light-top {
+      position: absolute;
+      width: 420px;
+      height: 420px;
+      top: -280px;
+      left: 50%;
+      transform: translateX(-50%);
+
+      background: rgba(125, 70, 190, 0.20);
+      filter: blur(100px);
+      border-radius: 50%;
+    }
+
+    .light-right {
+      position: absolute;
+      width: 300px;
+      height: 500px;
+      right: -230px;
+      top: 25%;
+
+      background: rgba(100, 50, 160, 0.13);
+      filter: blur(100px);
+      border-radius: 50%;
+    }
+
+    .light-bottom {
+      position: absolute;
+      width: 450px;
+      height: 250px;
+      bottom: -180px;
+      left: 50%;
+      transform: translateX(-50%);
+
+      background: rgba(90, 45, 150, 0.14);
+      filter: blur(90px);
+      border-radius: 50%;
+    }
+
+    .fog {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(70px);
+      opacity: 0.15;
+      animation: fogMove 12s ease-in-out infinite alternate;
+    }
+
+    .fog.one {
+      width: 180px;
+      height: 180px;
+      left: -80px;
+      top: 25%;
+      background: #4e277c;
+    }
+
+    .fog.two {
+      width: 220px;
+      height: 220px;
+      right: -120px;
+      bottom: 20%;
+      background: #35205d;
+      animation-delay: -5s;
+    }
+
+    @keyframes fogMove {
+      from {
+        transform: translate(0, 0);
+      }
+
+      to {
+        transform: translate(30px, -25px);
+      }
+    }
+
+    /* =========================
+       APP
+    ========================= */
+
+    .app {
+      position: relative;
+      z-index: 1;
       width: 100%;
-      max-width: 430px;
+      max-width: 520px;
+      min-height: 100vh;
+      margin: auto;
+
+      padding-bottom: 90px;
+    }
+
+    /* =========================
+       TOP BAR
+    ========================= */
+
+    .top-bar {
+      height: 75px;
+      display: flex;
+      align-items: center;
+
+      padding: 12px 15px;
+
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+
+      background:
+        linear-gradient(
+          180deg,
+          rgba(15,14,23,0.95),
+          rgba(10,9,15,0.78)
+        );
+
+      backdrop-filter: blur(15px);
+    }
+
+    .player-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      flex: 1;
+      min-width: 0;
+    }
+
+    .avatar {
+      width: 45px;
+      height: 45px;
+
+      border-radius: 50%;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 22px;
+
+      background:
+        linear-gradient(
+          145deg,
+          #332941,
+          #15121c
+        );
+
+      border: 1px solid rgba(180,120,255,0.35);
+
+      box-shadow:
+        0 0 15px rgba(120,70,180,0.20);
+
+      flex-shrink: 0;
+    }
+
+    .player-text {
+      min-width: 0;
+    }
+
+    .player-name {
+      font-size: 14px;
+      font-weight: bold;
+
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .player-level {
+      margin-top: 4px;
+
+      font-size: 10px;
+
+      color: #9f94ad;
+    }
+
+    /* =========================
+       STATS
+    ========================= */
+
+    .stats {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-left: 10px;
+    }
+
+    .stat {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+
+      font-size: 12px;
+
+      color: #ddd;
+    }
+
+    .stat-icon {
+      font-size: 15px;
+    }
+
+    .menu-btn {
+      width: 40px;
+      height: 40px;
+
+      border: 0;
+      border-radius: 12px;
+
+      background: rgba(255,255,255,0.05);
+
+      color: white;
+
+      font-size: 21px;
+
+      cursor: pointer;
+
+      margin-right: 8px;
+    }
+
+    .menu-btn:active {
+      transform: scale(0.94);
+      background: rgba(255,255,255,0.09);
+    }
+
+    /* =========================
+       CONTENT
+    ========================= */
+
+    .content {
+      padding: 25px 16px;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    /* =========================
+       GAME TITLE
+    ========================= */
+
+    .game-title {
       text-align: center;
+      margin-top: 10px;
+      margin-bottom: 30px;
     }
 
-    .logo {
-      font-size: 70px;
-      margin-bottom: 5px;
-      filter: drop-shadow(0 0 15px rgba(255,255,255,0.15));
+    /* =========================
+       MAFIA LOGO
+    ========================= */
+
+    .mafia-logo {
+      position: relative;
+
+      width: 105px;
+      height: 105px;
+
+      margin: 0 auto 10px;
+
+      filter:
+        drop-shadow(0 0 18px rgba(135, 75, 210, 0.45))
+        drop-shadow(0 0 35px rgba(70, 40, 120, 0.25));
     }
 
-    h1 {
-      margin: 0;
-      font-size: 42px;
+    .mafia-shadow {
+      position: absolute;
+
+      width: 100px;
+      height: 100px;
+
+      top: 3px;
+      left: 3px;
+
+      border-radius: 50%;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(125, 75, 180, 0.28) 0%,
+          rgba(80, 45, 125, 0.12) 38%,
+          transparent 72%
+        );
+
+      filter: blur(7px);
+    }
+
+    .mafia-head {
+      position: absolute;
+
+      width: 52px;
+      height: 63px;
+
+      top: 27px;
+      left: 27px;
+
+      border-radius: 45% 45% 48% 48%;
+
+      background:
+        linear-gradient(
+          145deg,
+          #343141 0%,
+          #171620 55%,
+          #08080d 100%
+        );
+
+      box-shadow:
+        inset -8px -5px 15px rgba(0,0,0,0.7),
+        inset 5px 3px 10px rgba(255,255,255,0.04);
+    }
+
+    .mafia-hat {
+      position: absolute;
+
+      width: 72px;
+      height: 23px;
+
+      top: 18px;
+      left: 16px;
+
+      background:
+        linear-gradient(
+          180deg,
+          #302d3b,
+          #0b0b11
+        );
+
+      border-radius: 50% 50% 20% 20%;
+
+      transform: rotate(-3deg);
+
+      box-shadow:
+        0 7px 12px rgba(0,0,0,0.55);
+    }
+
+    .mafia-hat::after {
+      content: "";
+
+      position: absolute;
+
+      width: 91px;
+      height: 9px;
+
+      left: -10px;
+      bottom: -4px;
+
+      border-radius: 50%;
+
+      background:
+        linear-gradient(
+          180deg,
+          #25222e,
+          #09090e
+        );
+    }
+
+    .mafia-eye {
+      position: absolute;
+
+      width: 6px;
+      height: 3px;
+
+      top: 54px;
+
+      border-radius: 50%;
+
+      background: #d7b5ff;
+
+      box-shadow:
+        0 0 7px rgba(190,130,255,0.9);
+    }
+
+    .eye-one {
+      left: 40px;
+    }
+
+    .eye-two {
+      left: 58px;
+    }
+
+    .mafia-collar {
+      position: absolute;
+
+      width: 72px;
+      height: 30px;
+
+      left: 16px;
+      top: 77px;
+
+      background:
+        linear-gradient(
+          145deg,
+          #25222e,
+          #09090e
+        );
+
+      clip-path:
+        polygon(
+          0 100%,
+          18% 0,
+          50% 35%,
+          82% 0,
+          100% 100%
+        );
+
+      box-shadow:
+        0 5px 15px rgba(0,0,0,0.5);
+    }
+
+    .game-title h1 {
+      font-size: 29px;
+
       letter-spacing: 1px;
+
+      margin-top: 3px;
+
+      background:
+        linear-gradient(
+          180deg,
+          #ffffff,
+          #bda9d2
+        );
+
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
-    .subtitle {
-      margin: 12px 0 35px;
-      color: #b9b9c8;
-      font-size: 17px;
+    .game-title p {
+      margin-top: 8px;
+
+      font-size: 12px;
+
+      color: #89818f;
     }
 
-    .menu {
+    /* =========================
+       GAME CARDS
+    ========================= */
+
+    .game-list {
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 13px;
     }
 
-    button {
+    .game-card {
+      position: relative;
+
       width: 100%;
-      border: none;
-      border-radius: 15px;
-      padding: 17px;
-      font-size: 18px;
-      font-weight: bold;
+      min-height: 84px;
+
+      display: flex;
+      align-items: center;
+
+      padding: 14px 16px;
+
+      border-radius: 18px;
+
+      border: 1px solid rgba(255,255,255,0.07);
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(35,31,45,0.88),
+          rgba(15,14,21,0.90)
+        );
+
+      box-shadow:
+        0 10px 25px rgba(0,0,0,0.20);
+
       cursor: pointer;
+
+      overflow: hidden;
+
+      transition:
+        transform 0.15s,
+        border 0.15s,
+        background 0.15s;
+    }
+
+    .game-card::before {
+      content: "";
+
+      position: absolute;
+
+      width: 100px;
+      height: 100px;
+
+      right: -50px;
+      top: -50px;
+
+      background: rgba(130,75,190,0.14);
+
+      filter: blur(25px);
+
+      border-radius: 50%;
+    }
+
+    .game-card:active {
+      transform: scale(0.98);
+
+      border-color:
+        rgba(165,105,230,0.35);
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(44,37,57,0.95),
+          rgba(18,16,25,0.95)
+        );
+    }
+
+    .game-icon {
+      width: 52px;
+      height: 52px;
+
+      border-radius: 15px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 25px;
+
+      background:
+        linear-gradient(
+          145deg,
+          #2c2339,
+          #15121d
+        );
+
+      border: 1px solid rgba(170,110,230,0.20);
+
+      margin-left: 13px;
+
+      flex-shrink: 0;
+    }
+
+    .game-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .game-info h3 {
+      font-size: 15px;
+
+      margin-bottom: 7px;
+    }
+
+    .game-info p {
+      font-size: 11px;
+
+      color: #817987;
+
+      line-height: 1.5;
+    }
+
+    .game-arrow {
+      font-size: 22px;
+
+      color: #786c83;
+
+      margin-right: 8px;
+    }
+
+    /* =========================
+       LOCKED GAME
+    ========================= */
+
+    .game-card.locked {
+      opacity: 0.45;
+
+      cursor: default;
+    }
+
+    .game-card.locked:active {
+      transform: none;
+    }
+
+    .lock {
+      font-size: 18px;
+
+      color: #8c8394;
+
+      margin-right: 8px;
+    }
+
+    /* =========================
+       OTHER PAGES
+    ========================= */
+
+    .empty-box {
+      min-height: 300px;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      text-align: center;
+
+      border-radius: 22px;
+
+      background:
+        rgba(20,18,27,0.72);
+
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .empty-icon {
+      font-size: 42px;
+      margin-bottom: 15px;
+    }
+
+    .empty-box h2 {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .empty-box p {
+      font-size: 12px;
+      color: #827987;
+    }
+
+    /* =========================
+       BOTTOM NAV
+    ========================= */
+
+    .bottom-nav {
+      position: fixed;
+
+      z-index: 20;
+
+      bottom: 0;
+      left: 50%;
+
+      transform: translateX(-50%);
+
+      width: 100%;
+      max-width: 520px;
+
+      height: 75px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+
+      padding: 7px 5px 9px;
+
+      background:
+        rgba(11,10,16,0.94);
+
+      border-top:
+        1px solid rgba(255,255,255,0.07);
+
+      backdrop-filter: blur(18px);
+    }
+
+    .nav-item {
+      width: 20%;
+
+      height: 60px;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      gap: 5px;
+
+      color: #716a77;
+
+      font-size: 9px;
+
+      cursor: pointer;
+
+      position: relative;
+
       transition: 0.2s;
     }
 
-    button:active {
-      transform: scale(0.97);
+    .nav-icon {
+      font-size: 20px;
+
+      line-height: 1;
     }
 
-    .main-button {
-      background: white;
-      color: #11111f;
+    .nav-item.active {
+      color: #d7b9ef;
     }
 
-    .secondary-button {
-      background: #242438;
-      color: white;
-      border: 1px solid #3a3a55;
+    .nav-item.active::before {
+      content: "";
+
+      position: absolute;
+
+      top: 0;
+
+      width: 30px;
+      height: 3px;
+
+      border-radius: 10px;
+
+      background: #a76bda;
+
+      box-shadow:
+        0 0 12px rgba(170,100,230,0.8);
     }
 
-    .secondary-button:hover {
-      background: #303047;
+    /* =========================
+       MENU
+    ========================= */
+
+    .menu-overlay {
+      position: fixed;
+
+      inset: 0;
+
+      z-index: 50;
+
+      background:
+        rgba(0,0,0,0.55);
+
+      backdrop-filter: blur(5px);
+
+      display: none;
     }
 
-    .footer {
-      margin-top: 35px;
-      color: #666679;
+    .menu-overlay.show {
+      display: block;
+    }
+
+    .menu-panel {
+      position: absolute;
+
+      top: 65px;
+      left: 15px;
+      right: 15px;
+
+      max-width: 490px;
+
+      margin: auto;
+
+      padding: 12px;
+
+      border-radius: 18px;
+
+      background:
+        linear-gradient(
+          145deg,
+          #1d1924,
+          #100f15
+        );
+
+      border:
+        1px solid rgba(255,255,255,0.08);
+
+      box-shadow:
+        0 20px 50px rgba(0,0,0,0.55);
+    }
+
+    .menu-item {
+      padding: 15px;
+
+      border-radius: 12px;
+
+      display: flex;
+      align-items: center;
+
+      gap: 12px;
+
       font-size: 13px;
+
+      color: #ddd;
+
+      cursor: pointer;
     }
+
+    .menu-item:active {
+      background: rgba(255,255,255,0.05);
+    }
+
+    /* =========================
+       DESKTOP
+    ========================= */
+
+    @media (min-width: 600px) {
+
+      body {
+        background: #030307;
+      }
+
+      .app {
+        background:
+          rgba(7,7,12,0.45);
+
+        min-height: 100vh;
+
+        box-shadow:
+          0 0 80px rgba(0,0,0,0.5);
+      }
+
+    }
+
   </style>
 </head>
 
 <body>
 
-  <div class="container">
+  <!-- =========================
+       BACKGROUND
+  ========================= -->
 
-    <div class="logo">🎭</div>
+  <div class="background">
 
-    <h1>مافیا</h1>
+    <div class="light-top"></div>
+    <div class="light-right"></div>
+    <div class="light-bottom"></div>
 
-    <div class="subtitle">
-      بازی گروهی مافیا
+    <div class="fog one"></div>
+    <div class="fog two"></div>
+
+  </div>
+
+
+  <!-- =========================
+       MAIN APP
+  ========================= -->
+
+  <div class="app">
+
+
+    <!-- =========================
+         TOP BAR
+    ========================= -->
+
+    <div class="top-bar">
+
+      <div class="player-info">
+
+        <div class="avatar">
+          👤
+        </div>
+
+        <div class="player-text">
+
+          <div class="player-name">
+            بازیکن
+          </div>
+
+          <div class="player-level">
+            سطح ۱
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="stats">
+
+        <div class="stat">
+          <span class="stat-icon">🪙</span>
+          <span>0</span>
+        </div>
+
+        <div class="stat">
+          <span class="stat-icon">⭐</span>
+          <span>0</span>
+        </div>
+
+      </div>
+
+
+      <button
+        class="menu-btn"
+        onclick="openMenu()"
+      >
+        ☰
+      </button>
+
     </div>
 
-    <div class="menu">
 
-      <button class="main-button" onclick="createRoom()">
-        🏠 ساخت اتاق
-      </button>
 
-      <button class="secondary-button" onclick="joinRoom()">
-        🚪 ورود به اتاق
-      </button>
+    <!-- =========================
+         CONTENT
+    ========================= -->
 
-      <button class="secondary-button" onclick="profile()">
-        👤 پروفایل
-      </button>
+    <main class="content">
 
-      <button class="secondary-button" onclick="settings()">
-        ⚙️ تنظیمات
-      </button>
 
-    </div>
+      <!-- =========================
+           GAMES
+      ========================= -->
 
-    <div class="footer">
-      نسخه اولیه بازی مافیا
+      <section
+        id="games"
+        class="page active"
+      >
+
+        <div class="game-title">
+
+
+          <!-- MAFIA LOGO -->
+
+          <div class="mafia-logo">
+
+            <div class="mafia-shadow"></div>
+
+            <div class="mafia-head"></div>
+
+            <div class="mafia-hat"></div>
+
+            <div class="mafia-eye eye-one"></div>
+
+            <div class="mafia-eye eye-two"></div>
+
+            <div class="mafia-collar"></div>
+
+          </div>
+
+
+          <h1>
+            مافیا
+          </h1>
+
+          <p>
+            حالت بازی خودت رو انتخاب کن
+          </p>
+
+        </div>
+
+
+
+        <div class="game-list">
+
+
+          <!-- 9 PLAYERS -->
+
+          <div
+            class="game-card"
+            onclick="startGame(9)"
+          >
+
+            <div class="game-icon">
+              🎭
+            </div>
+
+            <div class="game-info">
+
+              <h3>
+                مافیا ۹ نفره
+              </h3>
+
+              <p>
+                بازی کلاسیک با ۹ بازیکن
+              </p>
+
+            </div>
+
+            <div class="game-arrow">
+              ‹
+            </div>
+
+          </div>
+
+
+
+          <!-- 12 PLAYERS -->
+
+          <div
+            class="game-card"
+            onclick="startGame(12)"
+          >
+
+            <div class="game-icon">
+              🎭
+            </div>
+
+            <div class="game-info">
+
+              <h3>
+                مافیا ۱۲ نفره
+              </h3>
+
+              <p>
+                بازی حرفه‌ای با ۱۲ بازیکن
+              </p>
+
+            </div>
+
+            <div class="game-arrow">
+              ‹
+            </div>
+
+          </div>
+
+
+
+          <!-- 23 PLAYERS -->
+
+          <div
+            class="game-card locked"
+          >
+
+            <div class="game-icon">
+              🔒
+            </div>
+
+            <div class="game-info">
+
+              <h3>
+                مافیا ۲۳ نفره
+              </h3>
+
+              <p>
+                به‌زودی فعال می‌شود
+              </p>
+
+            </div>
+
+            <div class="lock">
+              🔒
+            </div>
+
+          </div>
+
+
+
+          <!-- 25 PLAYERS -->
+
+          <div
+            class="game-card locked"
+          >
+
+            <div class="game-icon">
+              🔒
+            </div>
+
+            <div class="game-info">
+
+              <h3>
+                مافیا ۲۵ نفره
+              </h3>
+
+              <p>
+                به‌زودی فعال می‌شود
+              </p>
+
+            </div>
+
+            <div class="lock">
+              🔒
+            </div>
+
+          </div>
+
+
+        </div>
+
+      </section>
+
+
+
+      <!-- =========================
+           FRIENDS
+      ========================= -->
+
+      <section
+        id="friends"
+        class="page"
+      >
+
+        <div class="empty-box">
+
+          <div class="empty-icon">
+            👥
+          </div>
+
+          <h2>
+            دوستان
+          </h2>
+
+          <p>
+            لیست دوستان و درخواست‌های دوستی
+          </p>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- =========================
+           CHAT
+      ========================= -->
+
+      <section
+        id="chat"
+        class="page"
+      >
+
+        <div class="empty-box">
+
+          <div class="empty-icon">
+            💬
+          </div>
+
+          <h2>
+            گفتگو
+          </h2>
+
+          <p>
+            پیام‌ها و گفتگوهای شما
+          </p>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- =========================
+           LEADERBOARD
+      ========================= -->
+
+      <section
+        id="leaderboard"
+        class="page"
+      >
+
+        <div class="empty-box">
+
+          <div class="empty-icon">
+            🏆
+          </div>
+
+          <h2>
+            برترین‌ها
+          </h2>
+
+          <p>
+            جدول رتبه‌بندی بازیکنان
+          </p>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- =========================
+           PROFILE
+      ========================= -->
+
+      <section
+        id="profile"
+        class="page"
+      >
+
+        <div class="empty-box">
+
+          <div class="empty-icon">
+            👤
+          </div>
+
+          <h2>
+            پروفایل
+          </h2>
+
+          <p>
+            اطلاعات و آمار بازیکن
+          </p>
+
+        </div>
+
+      </section>
+
+
+    </main>
+
+
+    <!-- =========================
+         BOTTOM NAVIGATION
+    ========================= -->
+
+    <nav class="bottom-nav">
+
+
+      <div
+        class="nav-item active"
+        onclick="showPage('games', this)"
+      >
+
+        <div class="nav-icon">
+          🎮
+        </div>
+
+        <span>
+          بازی‌ها
+        </span>
+
+      </div>
+
+
+      <div
+        class="nav-item"
+        onclick="showPage('friends', this)"
+      >
+
+        <div class="nav-icon">
+          👥
+        </div>
+
+        <span>
+          دوستان
+        </span>
+
+      </div>
+
+
+      <div
+        class="nav-item"
+        onclick="showPage('chat', this)"
+      >
+
+        <div class="nav-icon">
+          💬
+        </div>
+
+        <span>
+          گفتگو
+        </span>
+
+      </div>
+
+
+      <div
+        class="nav-item"
+        onclick="showPage('leaderboard', this)"
+      >
+
+        <div class="nav-icon">
+          🏆
+        </div>
+
+        <span>
+          برترین‌ها
+        </span>
+
+      </div>
+
+
+      <div
+        class="nav-item"
+        onclick="showPage('profile', this)"
+      >
+
+        <div class="nav-icon">
+          👤
+        </div>
+
+        <span>
+          پروفایل
+        </span>
+
+      </div>
+
+
+    </nav>
+
+  </div>
+
+
+
+  <!-- =========================
+       MENU OVERLAY
+  ========================= -->
+
+  <div
+    id="menuOverlay"
+    class="menu-overlay"
+    onclick="closeMenu(event)"
+  >
+
+    <div
+      class="menu-panel"
+      onclick="event.stopPropagation()"
+    >
+
+      <div
+        class="menu-item"
+        onclick="alert('تنظیمات')"
+      >
+        ⚙️
+        تنظیمات
+      </div>
+
+      <div
+        class="menu-item"
+        onclick="alert('اعلان‌ها')"
+      >
+        🔔
+        اعلان‌ها
+      </div>
+
+      <div
+        class="menu-item"
+        onclick="alert('درباره بازی')"
+      >
+        ℹ️
+        درباره بازی
+      </div>
+
     </div>
 
   </div>
 
+
+
+  <!-- =========================
+       JAVASCRIPT
+  ========================= -->
+
   <script>
 
-    function createRoom() {
-      alert("بخش ساخت اتاق به‌زودی فعال می‌شود 🎭");
+    function showPage(pageId, element) {
+
+      const pages =
+        document.querySelectorAll('.page');
+
+      pages.forEach(function(page) {
+
+        page.classList.remove('active');
+
+      });
+
+
+      const selectedPage =
+        document.getElementById(pageId);
+
+      if (selectedPage) {
+
+        selectedPage.classList.add('active');
+
+      }
+
+
+      const navItems =
+        document.querySelectorAll('.nav-item');
+
+      navItems.forEach(function(item) {
+
+        item.classList.remove('active');
+
+      });
+
+
+      if (element) {
+
+        element.classList.add('active');
+
+      }
+
     }
 
-    function joinRoom() {
-      alert("بخش ورود به اتاق به‌زودی فعال می‌شود 🚪");
+
+
+    function startGame(players) {
+
+      alert(
+        'انتخاب شد: مافیا ' +
+        players +
+        ' نفره'
+      );
+
     }
 
-    function profile() {
-      alert("پروفایل بازیکن به‌زودی فعال می‌شود 👤");
+
+
+    function openMenu() {
+
+      const menu =
+        document.getElementById('menuOverlay');
+
+      menu.classList.add('show');
+
     }
 
-    function settings() {
-      alert("تنظیمات به‌زودی فعال می‌شود ⚙️");
+
+
+    function closeMenu(event) {
+
+      if (
+        event.target.id === 'menuOverlay'
+      ) {
+
+        const menu =
+          document.getElementById('menuOverlay');
+
+        menu.classList.remove('show');
+
+      }
+
     }
 
   </script>
