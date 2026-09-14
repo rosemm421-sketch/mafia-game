@@ -582,6 +582,81 @@
       line-height: 2;
     }
 
+    /* پروفایل */
+
+    .profile-card {
+      padding: 20px 15px;
+      border-radius: 20px;
+      background: linear-gradient(135deg,rgba(35,21,53,.95),rgba(13,12,22,.95));
+      border: 1px solid rgba(160,80,230,.18);
+      text-align: center;
+      box-shadow: 0 8px 25px rgba(0,0,0,.25);
+    }
+
+    .profile-avatar-large {
+      width: 76px;
+      height: 76px;
+      margin: 0 auto 12px;
+      border-radius: 50%;
+      background: linear-gradient(135deg,#8b35d9,#30105b);
+      border: 2px solid rgba(180,100,255,.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+      box-shadow: 0 0 20px rgba(130,40,220,.25);
+      overflow: hidden;
+    }
+
+    .profile-display-name {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .profile-username {
+      font-size: 11px;
+      color: #8f8999;
+      margin-top: 5px;
+      direction: ltr;
+    }
+
+    .profile-level {
+      font-size: 10px;
+      color: #bd70ff;
+      margin-top: 7px;
+    }
+
+    .profile-stats {
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .profile-stat {
+      padding: 13px 8px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.035);
+      border: 1px solid rgba(255,255,255,.06);
+    }
+
+    .profile-stat-icon {
+      font-size: 21px;
+    }
+
+    .profile-stat-value {
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 4px;
+      color: #fff;
+    }
+
+    .profile-stat-label {
+      font-size: 9px;
+      color: #918b9b;
+      margin-top: 3px;
+    }
+
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -1174,16 +1249,51 @@
     اطلاعات حساب کاربری
   </div>
 
-  <div class="simple-box">
+  <div class="profile-card">
 
-    👤
-    <br>
+    <div class="profile-avatar-large" id="profileAvatar">
+      👤
+    </div>
 
-    بازیکن
+    <div class="profile-display-name" id="profileDisplayName">
+      بازیکن
+    </div>
 
-    <br>
+    <div class="profile-username" id="profileUsername">
+      player
+    </div>
 
-    سطح ۱
+    <div class="profile-level">
+      سطح ۱
+    </div>
+
+    <div class="profile-stats">
+
+      <div class="profile-stat">
+        <div class="profile-stat-icon">⭐</div>
+        <div class="profile-stat-value" id="profileScore">0</div>
+        <div class="profile-stat-label">امتیاز</div>
+      </div>
+
+      <div class="profile-stat">
+        <div class="profile-stat-icon">🏆</div>
+        <div class="profile-stat-value" id="profileWins">0</div>
+        <div class="profile-stat-label">برد</div>
+      </div>
+
+      <div class="profile-stat">
+        <div class="profile-stat-icon">💀</div>
+        <div class="profile-stat-value" id="profileLosses">0</div>
+        <div class="profile-stat-label">باخت</div>
+      </div>
+
+      <div class="profile-stat">
+        <div class="profile-stat-icon">🎮</div>
+        <div class="profile-stat-value" id="profileGames">0</div>
+        <div class="profile-stat-label">بازی‌ها</div>
+      </div>
+
+    </div>
 
   </div>
 
@@ -1386,6 +1496,109 @@
 
         scoreElement.textContent =
           Number(profile.score || 0);
+
+      }
+
+
+      /*
+        اتصال اطلاعات به صفحه پروفایل
+      */
+
+      const profileDisplayName =
+        document.getElementById('profileDisplayName');
+
+      if (profileDisplayName) {
+
+        profileDisplayName.textContent =
+          displayName;
+
+      }
+
+
+      const profileUsername =
+        document.getElementById('profileUsername');
+
+      if (profileUsername) {
+
+        profileUsername.textContent =
+          profile.username || '';
+
+      }
+
+
+      const profileScore =
+        document.getElementById('profileScore');
+
+      if (profileScore) {
+
+        profileScore.textContent =
+          Number(profile.score || 0);
+
+      }
+
+
+      const profileWins =
+        document.getElementById('profileWins');
+
+      if (profileWins) {
+
+        profileWins.textContent =
+          Number(profile.wins || 0);
+
+      }
+
+
+      const profileLosses =
+        document.getElementById('profileLosses');
+
+      if (profileLosses) {
+
+        profileLosses.textContent =
+          Number(profile.losses || 0);
+
+      }
+
+
+      const profileGames =
+        document.getElementById('profileGames');
+
+      if (profileGames) {
+
+        profileGames.textContent =
+          Number(profile.games_played || 0);
+
+      }
+
+
+      const profileAvatar =
+        document.getElementById('profileAvatar');
+
+      if (profileAvatar && profile.avatar_url) {
+
+        profileAvatar.innerHTML = '';
+
+        const img =
+          document.createElement('img');
+
+        img.src =
+          profile.avatar_url;
+
+        img.alt =
+          'آواتار';
+
+        img.style.width =
+          '100%';
+
+        img.style.height =
+          '100%';
+
+        img.style.objectFit =
+          'cover';
+
+        img.style.borderRadius =
+          '50%';
+
+        profileAvatar.appendChild(img);
 
       }
 
