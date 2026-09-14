@@ -683,7 +683,7 @@
 
   <div class="header-stats">
     <div class="stat">🪙 <span id="coinCount">5</span></div>
-    <div class="stat">⭐ <span>0</span></div>
+    <div class="stat">⭐ <span id="scoreCount">0</span></div>
     <button class="menu-btn" onclick="openMenu()">☰</button>
   </div>
 
@@ -1023,9 +1023,13 @@
     </div>
 
     <div class="players-count">
+
       <span id="currentPlayers">1</span>
+
       <span>/</span>
+
       <span id="maxPlayers">9</span>
+
     </div>
 
   </div>
@@ -1076,14 +1080,19 @@
   </div>
 
   <div class="simple-box">
+
     👥
     <br>
+
     این بخش برای ساخت اتاق خصوصی، دعوت حداکثر ۳ دوست
     و شروع بازی با دوستان ساخته خواهد شد.
+
     <br>
+
     <small>
       انتخاب نقش با سکه در این حالت وجود ندارد.
     </small>
+
   </div>
 
 </section>
@@ -1100,9 +1109,12 @@
   </div>
 
   <div class="simple-box">
+
     👥
     <br>
+
     هنوز دوستی اضافه نکرده‌ای.
+
   </div>
 
 </section>
@@ -1119,9 +1131,12 @@
   </div>
 
   <div class="simple-box">
+
     💬
     <br>
+
     گفتگوها در اینجا نمایش داده می‌شوند.
+
   </div>
 
 </section>
@@ -1138,9 +1153,12 @@
   </div>
 
   <div class="simple-box">
+
     🏆
     <br>
+
     جدول برترین بازیکنان به‌زودی فعال می‌شود.
+
   </div>
 
 </section>
@@ -1157,11 +1175,16 @@
   </div>
 
   <div class="simple-box">
+
     👤
     <br>
+
     بازیکن
+
     <br>
+
     سطح ۱
+
   </div>
 
 </section>
@@ -1173,32 +1196,42 @@
 
   <button class="nav-item active"
           onclick="showPage('games', this)">
+
     <div class="nav-icon">🎮</div>
     بازی‌ها
+
   </button>
 
   <button class="nav-item"
           onclick="showPage('friends', this)">
+
     <div class="nav-icon">👥</div>
     دوستان
+
   </button>
 
   <button class="nav-item"
           onclick="showPage('chat', this)">
+
     <div class="nav-icon">💬</div>
     گفتگو
+
   </button>
 
   <button class="nav-item"
           onclick="showPage('leaderboard', this)">
+
     <div class="nav-icon">🏆</div>
     برترین‌ها
+
   </button>
 
   <button class="nav-item"
           onclick="showPage('profile', this)">
+
     <div class="nav-icon">👤</div>
     پروفایل
+
   </button>
 
 </nav>
@@ -1225,14 +1258,13 @@
 
 
 <!-- Supabase -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 
   /*
     اتصال Supabase
-    این کلید Publishable است و برای استفاده در مرورگر ساخته شده.
-    امنیت واقعی دیتابیس را بعداً با RLS و Policyها تنظیم می‌کنیم.
   */
 
   const SUPABASE_URL =
@@ -1250,22 +1282,158 @@
   console.log('Supabase client initialized');
 
 
+  /*
+    ساخت یا پیدا کردن پروفایل بازیکن
+  */
+
+  async function ensureProfile() {
+
+    let { data: { session } } =
+      await supabaseClient.auth.getSession();
+
+    if (!session) {
+
+      const { data, error } =
+        await supabaseClient.auth.signInAnonymously();
+
+      if (error) {
+        throw error;
+      }
+
+      session = data.session;
+    }
+
+    const user = session.user;
+
+
+    const { data: profile, error: selectError } =
+      await supabaseClient
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .maybeSingle();
+
+    if (selectError) {
+      throw selectError;
+    }
+
+
+    if (!profile) {
+
+      const username =
+        `player_${user.id.slice(0, 6)}`;
+
+      const { data: inserted, error: insertError } =
+        await supabaseClient
+          .from('profiles')
+          .insert({
+            id: user.id,
+            username: username,
+            display_name: 'بازیکن',
+            avatar_url: null,
+            score: 0,
+            wins: 0,
+            losses: 0,
+            games_played: 0
+          })
+          .select()
+          .single();
+
+      if (insertError) {
+        throw insertError;
+      }
+
+      return inserted;
+    }
+
+    return profile;
+  }
+
+
+  /*
+    اتصال پروفایل به ظاهر بازی
+  */
+
+  async function initSupabaseProfile() {
+
+    try {
+
+      const profile =
+        await ensureProfile();
+
+
+      const displayName =
+        profile.display_name ||
+        profile.username ||
+        'بازیکن';
+
+
+      const usernameElement =
+        document.querySelector('.username');
+
+      if (usernameElement) {
+
+        usernameElement.textContent =
+          displayName;
+
+      }
+
+
+      const scoreElement =
+        document.getElementById('scoreCount');
+
+      if (scoreElement) {
+
+        scoreElement.textContent =
+          Number(profile.score || 0);
+
+      }
+
+
+      window.mafiaProfile =
+        profile;
+
+      window.mafiaUserId =
+        profile.id;
+
+
+      console.log(
+        'Supabase profile ready:',
+        profile
+      );
+
+    } catch (error) {
+
+      console.error(
+        'Supabase Auth/Profile error:',
+        error
+      );
+
+    }
+
+  }
+
+
   let selectedPlayers = 9;
 
   let selectedRole = null;
 
   let isRandomRole = false;
 
+
   /*
     فعلاً 5 سکه برای تست گذاشته شده.
-    بعداً این مقدار از حساب واقعی بازیکن می‌آید.
+    بعداً از حساب واقعی بازیکن می‌آید.
   */
+
   let myCoins = 5;
+
 
   /*
     فعلاً برای تست فرانت‌اند.
     بعداً به سرور واقعی وصل می‌شود.
   */
+
   let takenRoles = [];
 
 
@@ -1286,7 +1454,9 @@
   function hideAllPages() {
 
     document.querySelectorAll('.page').forEach(function(page) {
+
       page.classList.remove('active');
+
     });
 
   }
@@ -1296,18 +1466,27 @@
 
     hideAllPages();
 
-    const page = document.getElementById(pageId);
+    const page =
+      document.getElementById(pageId);
 
     if (page) {
+
       page.classList.add('active');
+
     }
 
+
     document.querySelectorAll('.nav-item').forEach(function(item) {
+
       item.classList.remove('active');
+
     });
 
+
     if (element) {
+
       element.classList.add('active');
+
     }
 
   }
@@ -1315,17 +1494,22 @@
 
   function openGameType(players) {
 
-    selectedPlayers = players;
+    selectedPlayers =
+      players;
 
     hideAllPages();
 
     document.getElementById('gameTypeTitle').textContent =
       'مافیا ' + players + ' نفره';
 
-    document.getElementById('gameType').classList.add('active');
+    document.getElementById('gameType')
+      .classList.add('active');
+
 
     document.querySelectorAll('.nav-item').forEach(function(item) {
+
       item.classList.remove('active');
+
     });
 
   }
@@ -1335,13 +1519,19 @@
 
     hideAllPages();
 
-    document.getElementById('games').classList.add('active');
+    document.getElementById('games')
+      .classList.add('active');
+
 
     document.querySelectorAll('.nav-item').forEach(function(item) {
+
       item.classList.remove('active');
+
     });
 
-    document.querySelector('.nav-item').classList.add('active');
+
+    document.querySelector('.nav-item')
+      .classList.add('active');
 
   }
 
@@ -1350,7 +1540,8 @@
 
     hideAllPages();
 
-    document.getElementById('gameType').classList.add('active');
+    document.getElementById('gameType')
+      .classList.add('active');
 
   }
 
@@ -1359,20 +1550,26 @@
 
     hideAllPages();
 
-    document.getElementById('publicRoles').classList.add('active');
+    document.getElementById('publicRoles')
+      .classList.add('active');
+
 
     document.getElementById('roleGameTitle').textContent =
       'مافیا ' + selectedPlayers + ' نفره';
 
+
     document.getElementById('roleCoinCount').textContent =
       myCoins;
+
 
     selectedRole = null;
 
     isRandomRole = false;
 
+
     document.getElementById('confirmBox')
       .classList.remove('show');
+
 
     updateRoleCards();
 
@@ -1381,31 +1578,45 @@
 
   function selectRole(card) {
 
-    const role = card.dataset.role;
+    const role =
+      card.dataset.role;
+
 
     if (takenRoles.includes(role)) {
 
-      alert('این نقش قبلاً در این لابی گرفته شده است.');
+      alert(
+        'این نقش قبلاً در این لابی گرفته شده است.'
+      );
 
       return;
 
     }
 
-    selectedRole = role;
 
-    isRandomRole = false;
+    selectedRole =
+      role;
+
+    isRandomRole =
+      false;
+
 
     document.querySelectorAll('.role-card').forEach(function(item) {
+
       item.classList.remove('selected');
+
     });
 
+
     card.classList.add('selected');
+
 
     document.getElementById('selectedRoleName').textContent =
       role;
 
+
     document.getElementById('selectedRoleText').textContent =
       'برای انتخاب این نقش ۵ سکه پرداخت می‌شود.';
+
 
     document.getElementById('confirmBox')
       .classList.add('show');
@@ -1415,9 +1626,13 @@
 
   function chooseRandomRole() {
 
-    const availableRoles = randomRoles.filter(function(role) {
-      return !takenRoles.includes(role);
-    });
+    const availableRoles =
+      randomRoles.filter(function(role) {
+
+        return !takenRoles.includes(role);
+
+      });
+
 
     if (availableRoles.length === 0) {
 
@@ -1429,15 +1644,26 @@
 
     }
 
+
     const randomIndex =
-      Math.floor(Math.random() * availableRoles.length);
+      Math.floor(
+        Math.random() *
+        availableRoles.length
+      );
+
 
     selectedRole =
       availableRoles[randomIndex];
 
-    isRandomRole = true;
 
-    takenRoles.push(selectedRole);
+    isRandomRole =
+      true;
+
+
+    takenRoles.push(
+      selectedRole
+    );
+
 
     openPublicLobby();
 
@@ -1448,17 +1674,21 @@
 
     if (!selectedRole) {
 
-      alert('اول یک نقش انتخاب کن.');
+      alert(
+        'اول یک نقش انتخاب کن.'
+      );
 
       return;
 
     }
+
 
     if (isRandomRole) {
 
       return;
 
     }
+
 
     if (myCoins < 5) {
 
@@ -1469,6 +1699,7 @@
       return;
 
     }
+
 
     if (takenRoles.includes(selectedRole)) {
 
@@ -1482,11 +1713,17 @@
 
     }
 
+
     myCoins -= 5;
 
-    takenRoles.push(selectedRole);
+
+    takenRoles.push(
+      selectedRole
+    );
+
 
     updateCoins();
+
 
     openPublicLobby();
 
@@ -1498,6 +1735,7 @@
     document.getElementById('coinCount').textContent =
       myCoins;
 
+
     document.getElementById('roleCoinCount').textContent =
       myCoins;
 
@@ -1508,27 +1746,40 @@
 
     document.querySelectorAll('.role-card').forEach(function(card) {
 
-      const role = card.dataset.role;
+      const role =
+        card.dataset.role;
+
 
       card.classList.remove('taken');
+
 
       const oldLabel =
         card.querySelector('.taken-label');
 
+
       if (oldLabel) {
+
         oldLabel.remove();
+
       }
+
 
       if (takenRoles.includes(role)) {
 
         card.classList.add('taken');
 
+
         const label =
           document.createElement('div');
 
-        label.className = 'taken-label';
 
-        label.textContent = 'گرفته شده';
+        label.className =
+          'taken-label';
+
+
+        label.textContent =
+          'گرفته شده';
+
 
         card.appendChild(label);
 
@@ -1543,11 +1794,15 @@
 
     hideAllPages();
 
+
     document.getElementById('publicLobby')
       .classList.add('active');
 
+
     document.getElementById('maxPlayers')
-      .textContent = selectedPlayers;
+      .textContent =
+      selectedPlayers;
+
 
     createPlayerSlots();
 
@@ -1559,14 +1814,23 @@
     const container =
       document.getElementById('playerSlots');
 
+
     container.innerHTML = '';
 
-    for (let i = 0; i < selectedPlayers; i++) {
+
+    for (
+      let i = 0;
+      i < selectedPlayers;
+      i++
+    ) {
 
       const slot =
         document.createElement('div');
 
-      slot.className = 'player-slot';
+
+      slot.className =
+        'player-slot';
+
 
       if (i === 0) {
 
@@ -1584,12 +1848,15 @@
 
       }
 
+
       container.appendChild(slot);
 
     }
 
+
     document.getElementById('currentPlayers')
-      .textContent = 1;
+      .textContent =
+      1;
 
   }
 
@@ -1601,25 +1868,34 @@
       const roleIndex =
         takenRoles.indexOf(selectedRole);
 
+
       if (roleIndex !== -1) {
 
-        takenRoles.splice(roleIndex, 1);
+        takenRoles.splice(
+          roleIndex,
+          1
+        );
 
       }
 
     }
 
+
     selectedRole = null;
 
     isRandomRole = false;
 
+
     document.getElementById('confirmBox')
       .classList.remove('show');
 
+
     hideAllPages();
+
 
     document.getElementById('publicRoles')
       .classList.add('active');
+
 
     updateRoleCards();
 
@@ -1635,22 +1911,30 @@
       const roleIndex =
         takenRoles.indexOf(selectedRole);
 
+
       if (roleIndex !== -1) {
 
-        takenRoles.splice(roleIndex, 1);
+        takenRoles.splice(
+          roleIndex,
+          1
+        );
 
       }
 
     }
 
+
     selectedRole = null;
 
     isRandomRole = false;
 
+
     hideAllPages();
+
 
     document.getElementById('publicRoles')
       .classList.add('active');
+
 
     updateRoleCards();
 
@@ -1664,28 +1948,42 @@
     const input =
       document.getElementById('chatInput');
 
+
     const message =
       input.value.trim();
 
+
     if (!message) {
+
       return;
+
     }
+
 
     const messages =
       document.getElementById('messages');
 
+
     const newMessage =
       document.createElement('div');
 
-    newMessage.style.marginBottom = '8px';
+
+    newMessage.style.marginBottom =
+      '8px';
+
 
     newMessage.innerHTML =
       '<strong style="color:#bd70ff;">شما:</strong> ' +
       escapeHtml(message);
 
-    messages.appendChild(newMessage);
+
+    messages.appendChild(
+      newMessage
+    );
+
 
     input.value = '';
+
 
     messages.scrollTop =
       messages.scrollHeight;
@@ -1698,7 +1996,10 @@
     const div =
       document.createElement('div');
 
-    div.textContent = text;
+
+    div.textContent =
+      text;
+
 
     return div.innerHTML;
 
@@ -1708,6 +2009,7 @@
   function openFriendsGame() {
 
     hideAllPages();
+
 
     document.getElementById('friendsGame')
       .classList.add('active');
@@ -1736,6 +2038,12 @@
 
 
   updateCoins();
+
+  /*
+    شروع احراز هویت و ساخت/خواندن پروفایل
+  */
+
+  initSupabaseProfile();
 
 </script>
 
