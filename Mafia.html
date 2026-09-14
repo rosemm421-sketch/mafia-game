@@ -831,7 +831,6 @@
         <div class="role-price">🪙 ۵ سکه</div>
       </div>
 
-
       <div class="role-card"
            data-role="بازپرس"
            onclick="selectRole(this)">
@@ -842,7 +841,6 @@
         </div>
         <div class="role-price">🪙 ۵ سکه</div>
       </div>
-
 
       <div class="role-card"
            data-role="اسنایپر"
@@ -855,7 +853,6 @@
         <div class="role-price">🪙 ۵ سکه</div>
       </div>
 
-
       <div class="role-card"
            data-role="کارآگاه"
            onclick="selectRole(this)">
@@ -867,7 +864,6 @@
         <div class="role-price">🪙 ۵ سکه</div>
       </div>
 
-
       <div class="role-card"
            data-role="ساحره"
            onclick="selectRole(this)">
@@ -878,7 +874,6 @@
         </div>
         <div class="role-price">🪙 ۵ سکه</div>
       </div>
-
 
       <div class="role-card"
            data-role="شهروند ساده"
@@ -921,7 +916,6 @@
         <div class="role-price">🪙 ۵ سکه</div>
 
       </div>
-
 
       <div class="role-card"
            data-role="نوچه مافیا"
@@ -969,7 +963,6 @@
         <div class="role-price">🪙 ۵ سکه</div>
 
       </div>
-
 
       <div class="role-card"
            data-role="قاتل سریالی"
@@ -1037,16 +1030,11 @@
 
   </div>
 
-
   <div class="player-slots" id="playerSlots"></div>
-
-
-  <!-- خروج از لابی -->
 
   <button class="exit-lobby-btn" onclick="exitLobby()">
     🚪 خروج از لابی
   </button>
-
 
   <div class="chat-box">
 
@@ -1236,7 +1224,31 @@
 </div>
 
 
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
+
+  /*
+    اتصال Supabase
+    این کلید Publishable است و برای استفاده در مرورگر ساخته شده.
+    امنیت واقعی دیتابیس را بعداً با RLS و Policyها تنظیم می‌کنیم.
+  */
+
+  const SUPABASE_URL =
+    'https://cgfybhxkgcwmkmcxogrd.supabase.co';
+
+  const SUPABASE_PUBLISHABLE_KEY =
+    'sb_publishable_FoAymAE6hPQImaCtEaTaiw_FAWfsq5L';
+
+  const supabaseClient =
+    window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
+
+  console.log('Supabase client initialized');
+
 
   let selectedPlayers = 9;
 
@@ -1367,10 +1379,6 @@
   }
 
 
-  /*
-    انتخاب دستی نقش
-  */
-
   function selectRole(card) {
 
     const role = card.dataset.role;
@@ -1405,26 +1413,11 @@
   }
 
 
-  /*
-    نقش تصادفی
-    رایگان و ورود مستقیم به لابی
-  */
-
   function chooseRandomRole() {
-
-    /*
-      فقط نقش‌هایی که هنوز گرفته نشده‌اند
-      می‌توانند انتخاب شوند.
-    */
 
     const availableRoles = randomRoles.filter(function(role) {
       return !takenRoles.includes(role);
     });
-
-
-    /*
-      اگر هیچ نقشی باقی نمانده باشد.
-    */
 
     if (availableRoles.length === 0) {
 
@@ -1436,46 +1429,20 @@
 
     }
 
-
-    /*
-      انتخاب تصادفی یک نقش آزاد.
-    */
-
     const randomIndex =
       Math.floor(Math.random() * availableRoles.length);
-
 
     selectedRole =
       availableRoles[randomIndex];
 
-
-    /*
-      مشخص می‌کنیم که نقش تصادفی بوده.
-    */
-
     isRandomRole = true;
 
-
-    /*
-      نقش همان لحظه رزرو می‌شود.
-    */
-
     takenRoles.push(selectedRole);
-
-
-    /*
-      هیچ تأییدی نمایش داده نمی‌شود.
-      بازیکن مستقیم وارد لابی می‌شود.
-    */
 
     openPublicLobby();
 
   }
 
-
-  /*
-    تأیید نقش خریداری‌شده
-  */
 
   function confirmRole() {
 
@@ -1487,23 +1454,11 @@
 
     }
 
-
-    /*
-      اگر تصادفی باشد، نباید وارد این قسمت شود.
-      چون نقش تصادفی مستقیماً وارد لابی شده است.
-    */
-
     if (isRandomRole) {
 
       return;
 
     }
-
-
-    /*
-      انتخاب دستی:
-      ۵ سکه لازم دارد.
-    */
 
     if (myCoins < 5) {
 
@@ -1514,11 +1469,6 @@
       return;
 
     }
-
-
-    /*
-      بررسی دوباره نقش.
-    */
 
     if (takenRoles.includes(selectedRole)) {
 
@@ -1532,15 +1482,9 @@
 
     }
 
-
-    /*
-      پرداخت ۵ سکه.
-    */
-
     myCoins -= 5;
 
     takenRoles.push(selectedRole);
-
 
     updateCoins();
 
@@ -1560,10 +1504,6 @@
   }
 
 
-  /*
-    مشخص کردن نقش‌های گرفته شده
-  */
-
   function updateRoleCards() {
 
     document.querySelectorAll('.role-card').forEach(function(card) {
@@ -1578,7 +1518,6 @@
       if (oldLabel) {
         oldLabel.remove();
       }
-
 
       if (takenRoles.includes(role)) {
 
@@ -1599,10 +1538,6 @@
 
   }
 
-
-  /*
-    ورود به لابی عمومی
-  */
 
   function openPublicLobby() {
 
@@ -1626,14 +1561,12 @@
 
     container.innerHTML = '';
 
-
     for (let i = 0; i < selectedPlayers; i++) {
 
       const slot =
         document.createElement('div');
 
       slot.className = 'player-slot';
-
 
       if (i === 0) {
 
@@ -1651,22 +1584,15 @@
 
       }
 
-
       container.appendChild(slot);
 
     }
-
 
     document.getElementById('currentPlayers')
       .textContent = 1;
 
   }
 
-
-  /*
-    خروج از لابی
-    نقش بازیکن آزاد می‌شود.
-  */
 
   function exitLobby() {
 
@@ -1683,21 +1609,17 @@
 
     }
 
-
     selectedRole = null;
 
     isRandomRole = false;
 
-
     document.getElementById('confirmBox')
       .classList.remove('show');
-
 
     hideAllPages();
 
     document.getElementById('publicRoles')
       .classList.add('active');
-
 
     updateRoleCards();
 
@@ -1706,16 +1628,7 @@
   }
 
 
-  /*
-    برگشت از لابی به صفحه نقش‌ها
-  */
-
   function backToRoles() {
-
-    /*
-      اگر بازیکن نقش گرفته باشد،
-      نقش آزاد می‌شود.
-    */
 
     if (selectedRole) {
 
@@ -1730,11 +1643,9 @@
 
     }
 
-
     selectedRole = null;
 
     isRandomRole = false;
-
 
     hideAllPages();
 
@@ -1756,15 +1667,12 @@
     const message =
       input.value.trim();
 
-
     if (!message) {
       return;
     }
 
-
     const messages =
       document.getElementById('messages');
-
 
     const newMessage =
       document.createElement('div');
@@ -1774,7 +1682,6 @@
     newMessage.innerHTML =
       '<strong style="color:#bd70ff;">شما:</strong> ' +
       escapeHtml(message);
-
 
     messages.appendChild(newMessage);
 
